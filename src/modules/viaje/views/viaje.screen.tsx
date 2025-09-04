@@ -118,7 +118,10 @@ export default function ViajeScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: '#f5f5f5' }}
+      edges={['left', 'right', 'bottom']}
+    >
       <View style={viajeStyles.container}>
         <View style={viajeStyles.header}>
           <Text style={viajeStyles.title}>Viajes</Text>
