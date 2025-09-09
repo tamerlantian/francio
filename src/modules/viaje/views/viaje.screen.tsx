@@ -3,7 +3,6 @@ import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { viajeStyles } from '../styles/viaje.style';
 import { useViaje } from '../view-models/viaje.view-model';
-// import { router } from 'expo-router';
 import React from 'react';
 import { ViajeCard } from '../components/viaje-card.component';
 

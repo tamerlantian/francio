@@ -78,6 +78,15 @@ export default function AppLayout() {
             headerTitle: '',
           }}
         />
+
+        <Drawer.Screen
+          name="(conductor)"
+          options={{
+            drawerLabel: 'Conductores',
+            headerShown: true,
+            headerTitle: '',
+          }}
+        />
       </Drawer>
     </GestureHandlerRootView>
   );
