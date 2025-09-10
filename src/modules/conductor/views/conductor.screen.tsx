@@ -4,25 +4,61 @@ import { useConductor } from '../view-models/conductor.view-model';
 import { conductorStyles } from '../styles/conductor.style';
 import { Ionicons } from '@expo/vector-icons';
 import { ConductorCard } from '../components/conductor-card';
-import { router } from 'expo-router';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import BottomSheet from '@gorhom/bottom-sheet';
 import CustomBottomSheet from '@/src/shared/components/bottom-sheet/bottom-sheet';
 import ConductorFormulario from '../components/conductor-formulario';
+import { Conductor } from '../interfaces/conductor.interface';
 // Componente principal de la pantalla de conductores
 export default function ConductorScreen() {
   // Utilizamos el ViewModel para obtener los datos
   const { conductores, isLoading, isError, refetch } = useConductor();
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  // Función para abrir el bottom sheet
-  const handleOpenDevModeSheet = () => {
+  // Estado para manejar el modo del formulario y el conductor seleccionado
+  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
+  const [selectedConductor, setSelectedConductor] = useState<Conductor | null>(null);
+  const [isFormLoading, setIsFormLoading] = useState(false);
+
+  // Función para abrir el modal de creación
+  const handleOpenCreateModal = () => {
+    setFormMode('create');
+    setSelectedConductor(null);
+    bottomSheetRef.current?.expand();
+  };
+
+  // Función para abrir el modal de edición
+  const handleOpenEditModal = (conductor: Conductor) => {
+    setFormMode('edit');
+    setSelectedConductor(conductor);
     bottomSheetRef.current?.expand();
   };
 
   // Función para cerrar el bottom sheet
-  const handleCloseDevModeSheet = () => {
+  const handleCloseModal = () => {
     bottomSheetRef.current?.close();
+    setSelectedConductor(null);
+  };
+
+  // Función para manejar el envío del formulario
+  const handleFormSubmit = async (data: any) => {
+    setIsFormLoading(true);
+    try {
+      // TODO: Implementar la lógica de guardado/actualización
+      console.log('Datos del formulario:', data);
+      console.log('Modo:', formMode);
+
+      // Simular una operación async
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Cerrar el modal y refrescar los datos
+      handleCloseModal();
+      refetch();
+    } catch (error) {
+      console.error('Error al guardar conductor:', error);
+    } finally {
+      setIsFormLoading(false);
+    }
   };
 
   // Si está cargando, mostramos un indicador
@@ -66,10 +102,7 @@ export default function ConductorScreen() {
             data={conductores}
             keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => (
-              <ConductorCard
-                conductor={item}
-                onPress={conductor => console.log(`Ver detalle del conductor ${conductor.id}`)}
-              />
+              <ConductorCard conductor={item} onPress={handleOpenEditModal} />
             )}
             showsVerticalScrollIndicator={false}
           />
@@ -81,13 +114,19 @@ export default function ConductorScreen() {
         )}
 
         {/* Botón flotante para agregar un nuevo conductor */}
-        <TouchableOpacity style={conductorStyles.addButton} onPress={handleOpenDevModeSheet}>
+        <TouchableOpacity style={conductorStyles.addButton} onPress={handleOpenCreateModal}>
           <Ionicons name="add" size={24} color="white" />
         </TouchableOpacity>
       </View>
 
-      <CustomBottomSheet ref={bottomSheetRef} initialSnapPoints={['40%']}>
-        <ConductorFormulario />
+      <CustomBottomSheet ref={bottomSheetRef} initialSnapPoints={['85%']}>
+        <ConductorFormulario
+          initialData={selectedConductor || undefined}
+          onSubmit={handleFormSubmit}
+          onCancel={handleCloseModal}
+          isLoading={isFormLoading}
+          mode={formMode}
+        />
       </CustomBottomSheet>
     </SafeAreaView>
   );

@@ -31,4 +31,5 @@ export interface Conductor {
   estado_inactivo: boolean;
   estado_revisado: boolean;
   comentario: string | null;
+  conductor: boolean;
 }
