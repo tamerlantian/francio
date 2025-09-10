@@ -3,12 +3,13 @@ import { DevModeSelector } from '@/src/shared/components/bottom-sheet/dev-mode-s
 import { FormButton } from '@/src/shared/components/ui/button/FormButton';
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
 import { PasswordInputController } from '@/src/shared/components/ui/form/PasswordInputController';
+import { useDevMode } from '@/src/shared/context/dev-mode-context';
 import { Ionicons } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { router } from 'expo-router';
 import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LoginFormValues } from '../interfaces/auth.interface';
 import { loginStyles } from '../styles/login.style';
@@ -17,6 +18,9 @@ import { useLogin } from '../view-models/login.view-model';
 export const LoginScreen = () => {
   // ViewModel para login
   const { login, isLoading } = useLogin();
+
+  // Contexto de modo desarrollador
+  const { isLoading: isDevModeLoading } = useDevMode();
 
   // Referencia al bottom sheet
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -48,6 +52,16 @@ export const LoginScreen = () => {
   const onSubmit = (data: LoginFormValues) => {
     login(data);
   };
+
+  // Mostrar loading mientras se inicializa el contexto de modo desarrollador
+  if (isDevModeLoading) {
+    return (
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0066cc" />
+        <Text style={{ marginTop: 16, color: '#666' }}>Inicializando...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
