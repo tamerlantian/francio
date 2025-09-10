@@ -1,9 +1,11 @@
 import { useConductoresSelector } from '@/src/modules/conductor/view-models/conductor.view-model';
 import { useVehiculosSelector } from '@/src/modules/vehiculo/view-models/vehiculo.view-model';
-import { Ionicons } from '@expo/vector-icons';
+import { EmptyState } from '@/src/shared/components/ui/empty-state/EmptyState';
+import { ErrorState } from '@/src/shared/components/ui/error-state/ErrorState';
+import { LoadingSpinner } from '@/src/shared/components/ui/loading/LoadingSpinner';
 import BottomSheet from '@gorhom/bottom-sheet';
 import React, { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, RefreshControl, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   AsignarViajeFormValues,
@@ -51,6 +53,11 @@ export default function ViajeScreen() {
     }
   }, [selectedViaje]);
 
+  // Función para manejar el pull-to-refresh
+  const handleRefresh = () => {
+    refetchViajes();
+  };
+
   // Manejar la aceptación del viaje
   const handleAceptar = (formData: AsignarViajeFormValues) => {
     if (selectedViaje) {
@@ -77,27 +84,17 @@ export default function ViajeScreen() {
 
   // Si está cargando, mostramos un indicador
   if (isLoading) {
-    return (
-      <View style={viajeStyles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0066cc" />
-        <Text style={{ marginTop: 10 }}>Cargando viajes...</Text>
-      </View>
-    );
+    return <LoadingSpinner message="Cargando viajes..." />;
   }
 
   // Si hay un error, mostramos un mensaje
   if (isError) {
     return (
-      <View style={viajeStyles.emptyContainer}>
-        <Ionicons name="alert-circle-outline" size={48} color="#F44336" />
-        <Text style={viajeStyles.emptyText}>Ocurrió un error al cargar los viajes</Text>
-        <TouchableOpacity
-          style={{ marginTop: 16, padding: 10, backgroundColor: '#0066cc', borderRadius: 8 }}
-          onPress={() => refetchViajes()}
-        >
-          <Text style={{ color: 'white' }}>Intentar nuevamente</Text>
-        </TouchableOpacity>
-      </View>
+      <ErrorState
+        title="Ocurrió un error al cargar los viajes"
+        subtitle="Verifica tu conexión a internet e intenta nuevamente"
+        onRetry={() => refetchViajes()}
+      />
     );
   }
 
@@ -108,19 +105,29 @@ export default function ViajeScreen() {
           <Text style={viajeStyles.title}>Viajes</Text>
         </View>
 
-        {viajes.length > 0 ? (
-          <FlatList
-            data={viajes}
-            keyExtractor={item => item.datos.id.toString()}
-            renderItem={({ item }) => <ViajeCard viaje={item} onPress={handleViajePress} />}
-            showsVerticalScrollIndicator={false}
-          />
-        ) : (
-          <View style={viajeStyles.emptyContainer}>
-            <Ionicons name="car-outline" size={48} color="#666" />
-            <Text style={viajeStyles.emptyText}>No tienes viajes disponibles</Text>
-          </View>
-        )}
+        <FlatList
+          data={viajes}
+          keyExtractor={item => item.datos.id.toString()}
+          renderItem={({ item }) => <ViajeCard viaje={item} onPress={handleViajePress} />}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <EmptyState
+              icon="car-outline"
+              title="No tienes viajes disponibles"
+              subtitle="Desliza hacia abajo para actualizar"
+            />
+          }
+          refreshControl={
+            <RefreshControl
+              refreshing={isLoadingViajes}
+              onRefresh={handleRefresh}
+              colors={['#0066cc']} // Android
+              tintColor="#0066cc" // iOS
+              title="Actualizando viajes..." // iOS
+              titleColor="#666" // iOS
+            />
+          }
+        />
 
         {/* Bottom Sheet para asignar viaje */}
         <AsignarViajeSheet
