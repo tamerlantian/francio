@@ -1,15 +1,18 @@
+import { useConductoresSelector } from '@/src/modules/conductor/view-models/conductor.view-model';
+import { useVehiculosSelector } from '@/src/modules/vehiculo/view-models/vehiculo.view-model';
 import { Ionicons } from '@expo/vector-icons';
+import BottomSheet from '@gorhom/bottom-sheet';
+import React, { useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { viajeStyles } from '../styles/viaje.style';
-import { useViaje } from '../view-models/viaje.view-model';
-import { useConductoresSelector } from '@/src/modules/conductor/view-models/conductor.view-model';
-import React, { useRef, useState } from 'react';
+import {
+  AsignarViajeFormValues,
+  AsignarViajeSheet,
+} from '../components/asignar-viaje-sheet.component';
 import { ViajeCard } from '../components/viaje-card.component';
 import { Viaje } from '../interfaces/viaje.interface';
-import BottomSheet from '@gorhom/bottom-sheet';
-import { AsignarViajeSheet } from '../components/asignar-viaje-sheet.component';
-import { useVehiculosSelector } from '@/src/modules/vehiculo/view-models/vehiculo.view-model';
+import { viajeStyles } from '../styles/viaje.style';
+import { useAceptarViaje, useViaje } from '../view-models/viaje.view-model';
 
 // Componente principal de la pantalla de viajes
 export default function ViajeScreen() {
@@ -26,6 +29,8 @@ export default function ViajeScreen() {
     isError: isErrorConductores,
   } = useConductoresSelector();
   const { vehiculosOptions } = useVehiculosSelector();
+  // Usar el hook para aceptar viajes
+  const { aceptarViaje } = useAceptarViaje();
 
   // Estado para el viaje seleccionado
   const [selectedViaje, setSelectedViaje] = useState<Viaje | null>(null);
@@ -44,14 +49,22 @@ export default function ViajeScreen() {
   };
 
   // Manejar la aceptación del viaje
-  const handleAceptar = (formData: { conductor: string; vehiculo: string }) => {
+  const handleAceptar = (formData: AsignarViajeFormValues) => {
     if (selectedViaje) {
-      console.log('Viaje aceptado:', {
-        viajeId: selectedViaje.datos.id,
-        conductor: formData.conductor,
-        vehiculo: formData.vehiculo,
-      });
-      bottomSheetRef.current?.close();
+      // Llamar a la mutación para aceptar el viaje
+      aceptarViaje(
+        {
+          viajeId: selectedViaje.datos.id,
+          conductorId: parseInt(formData.conductor_id),
+          vehiculoId: parseInt(formData.vehiculo_id),
+        },
+        {
+          onSuccess: () => {
+            // Cerrar el bottom sheet cuando la operación sea exitosa
+            bottomSheetRef.current?.close();
+          },
+        },
+      );
     }
   };
 

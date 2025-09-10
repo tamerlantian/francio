@@ -1,15 +1,18 @@
-import React, { forwardRef, useEffect } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Viaje } from '../interfaces/viaje.interface';
 import CustomBottomSheet from '@/src/shared/components/bottom-sheet/bottom-sheet';
-import BottomSheet from '@gorhom/bottom-sheet';
-import { Ionicons } from '@expo/vector-icons';
-import { useForm } from 'react-hook-form';
 import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
+import { Ionicons } from '@expo/vector-icons';
+import BottomSheet from '@gorhom/bottom-sheet';
+import React, { forwardRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { StyleSheet, Text, View } from 'react-native';
+import { Viaje } from '../interfaces/viaje.interface';
+import { FormButton } from '@/src/shared/components/ui/button/FormButton';
+import { useAceptarViaje } from '../view-models/viaje.view-model';
 
-interface FormValues {
-  conductor: string;
-  vehiculo: string;
+export interface AsignarViajeFormValues {
+  conductor_id: string;
+  vehiculo_id: string;
+  viaje_id: number;
 }
 
 interface AsignarViajeSheetProps {
@@ -18,23 +21,14 @@ interface AsignarViajeSheetProps {
   selectedVehiculo: string;
   onConductorChange: (_value: string) => void;
   onVehiculoChange: (_value: string) => void;
-  onAceptar: (_data: FormValues) => void;
+  onAceptar: (_data: AsignarViajeFormValues) => void;
   conductoresOptions: { label: string; value: string }[];
   vehiculosOptions: { label: string; value: string }[];
 }
 
 export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>(
   (
-    {
-      viaje,
-      selectedConductor,
-      selectedVehiculo,
-      onConductorChange,
-      onVehiculoChange,
-      onAceptar,
-      conductoresOptions,
-      vehiculosOptions,
-    },
+    { viaje, selectedConductor, selectedVehiculo, onAceptar, conductoresOptions, vehiculosOptions },
     ref,
   ) => {
     // Configuración de React Hook Form
@@ -42,40 +36,18 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
       control,
       handleSubmit,
       formState: { errors, isValid },
-      setValue,
-      watch,
-    } = useForm<FormValues>({
+    } = useForm<AsignarViajeFormValues>({
       defaultValues: {
-        conductor: selectedConductor,
-        vehiculo: selectedVehiculo,
+        viaje_id: viaje?.datos.id || 0,
+        conductor_id: selectedConductor,
+        vehiculo_id: selectedVehiculo,
       },
       mode: 'onChange',
     });
-
-    // Observar cambios en los campos para actualizar el estado externo
-    const conductorValue = watch('conductor');
-    const vehiculoValue = watch('vehiculo');
-
-    useEffect(() => {
-      if (conductorValue !== selectedConductor) {
-        onConductorChange(conductorValue);
-      }
-    }, [conductorValue, selectedConductor, onConductorChange]);
-
-    useEffect(() => {
-      if (vehiculoValue !== selectedVehiculo) {
-        onVehiculoChange(vehiculoValue);
-      }
-    }, [vehiculoValue, selectedVehiculo, onVehiculoChange]);
-
-    // Actualizar valores del formulario cuando cambian las props
-    useEffect(() => {
-      setValue('conductor', selectedConductor);
-      setValue('vehiculo', selectedVehiculo);
-    }, [selectedConductor, selectedVehiculo, setValue]);
+    const { isLoading } = useAceptarViaje();
 
     // Manejar el envío del formulario
-    const onSubmit = (data: FormValues) => {
+    const onSubmit = (data: AsignarViajeFormValues) => {
       onAceptar(data);
     };
 
@@ -94,34 +66,31 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
           <View style={styles.selectorsContainer}>
             <FormSelectorController
               control={control}
-              name="conductor"
+              name="conductor_id"
               label="Conductor"
               placeholder="Seleccionar conductor"
               options={conductoresOptions}
-              error={errors.conductor}
+              error={errors.conductor_id}
               rules={{ required: 'El conductor es obligatorio' }}
             />
 
             <FormSelectorController
               control={control}
-              name="vehiculo"
+              name="vehiculo_id"
               label="Vehículo"
               placeholder="Seleccionar vehículo"
               options={vehiculosOptions}
-              error={errors.vehiculo}
+              error={errors.vehiculo_id}
               rules={{ required: 'El vehículo es obligatorio' }}
             />
           </View>
 
-          <TouchableOpacity
-            style={[styles.acceptButton, !isValid && styles.acceptButtonDisabled]}
+          <FormButton
             onPress={handleSubmit(onSubmit)}
+            isLoading={isLoading}
             disabled={!isValid}
-          >
-            <Text style={[styles.acceptButtonText, !isValid && styles.acceptButtonTextDisabled]}>
-              Aceptar Viaje
-            </Text>
-          </TouchableOpacity>
+            title="Aceptar Viaje"
+          />
         </View>
       </CustomBottomSheet>
     );

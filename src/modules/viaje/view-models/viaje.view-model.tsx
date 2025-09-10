@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { viajeController } from '../controllers/viaje.controller';
+import { useToast } from '@/src/shared/hooks/use-toast.hook';
 
 export const viajeKeys = {
   all: ['viajes'] as const,
@@ -22,5 +23,46 @@ export const useViaje = () => {
     isError,
     error,
     refetch,
+  };
+};
+
+export const useAceptarViaje = () => {
+  const queryClient = useQueryClient();
+  const toast = useToast();
+
+  const {
+    mutate,
+    isPending: isLoading,
+    isError,
+    error,
+    isSuccess,
+  } = useMutation({
+    mutationFn: ({
+      viajeId,
+      conductorId,
+      vehiculoId,
+    }: {
+      viajeId: number;
+      conductorId: number;
+      vehiculoId: number;
+    }) => {
+      return viajeController.aceptarViaje(viajeId, conductorId, vehiculoId);
+    },
+    onSuccess: () => {
+      // Invalidar la consulta de viajes para que se actualice la lista
+      queryClient.invalidateQueries({ queryKey: viajeKeys.list() });
+      toast.success('Viaje aceptado exitosamente');
+    },
+    onError: () => {
+      toast.error('Error al aceptar el viaje');
+    },
+  });
+
+  return {
+    aceptarViaje: mutate,
+    isLoading,
+    isError,
+    error,
+    isSuccess,
   };
 };

@@ -31,7 +31,15 @@ export class ViajeRepository extends HttpBaseRepository {
    * @param credentials Credenciales de login (email y password)
    * @returns Promise con la respuesta del login
    */
-  async getViajes(params: ApiQueryParametros = {}): Promise<any> {
+  async getViajes(params: ApiQueryParametros = {}) {
     return this.get<any>('vertical/viaje/lista/', params);
+  }
+
+  async aceptarViaje(viajeId: number, conductorId: number, vehiculoId: number) {
+    return this.post<any>('vertical/viaje/aceptar/', {
+      viaje_id: viajeId,
+      conductor_id: conductorId,
+      vehiculo_id: vehiculoId,
+    });
   }
 }

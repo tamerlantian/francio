@@ -42,7 +42,6 @@ export class HttpBaseRepository {
       async config => {
         // Establecer la baseURL dinámicamente en cada request
         config.baseURL = this.getCurrentBaseUrl();
-        console.log('Current baseURL:', config.baseURL);
         const token = await storageService.getItem(AUTH_TOKEN_KEY);
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;

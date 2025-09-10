@@ -12,4 +12,19 @@ export const viajeController = {
       throw error;
     }
   },
+
+  // Realizar login de usuario
+  aceptarViaje: async (viajeId: number, conductorId: number, vehiculoId: number): Promise<any> => {
+    try {
+      const response = await ViajeRepository.getInstance().aceptarViaje(
+        viajeId,
+        conductorId,
+        vehiculoId,
+      );
+      console.log(response);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
