@@ -69,82 +69,89 @@ export const LoginScreen = () => {
       <TouchableOpacity style={loginStyles.devModeButton} onPress={handleOpenDevModeSheet}>
         <Ionicons name="settings" size={24} color="#666" className="mt-6" />
       </TouchableOpacity>
-
-      <ScrollView contentContainerStyle={loginStyles.container} keyboardShouldPersistTaps="handled">
-        <View style={loginStyles.logoContainer}>
-          <Image source={require('../../../../assets/images/icon.png')} style={loginStyles.logo} />
-        </View>
-
-        <Text style={loginStyles.title}>Iniciar Sesión</Text>
-
-        {/* Campo de email */}
-        <FormInputController<LoginFormValues>
-          control={control}
-          name="username"
-          label="Correo electrónico"
-          placeholder="john.doe@example.com"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          error={errors.username}
-          rules={{
-            required: 'El correo electrónico es obligatorio',
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: 'Correo electrónico inválido',
-            },
-          }}
-        />
-
-        {/* Campo de contraseña */}
-        <PasswordInputController<LoginFormValues>
-          control={control}
-          name="password"
-          label="Contraseña"
-          placeholder="**************"
-          error={errors.password}
-          rules={{
-            required: 'La contraseña es obligatoria',
-            minLength: {
-              value: 6,
-              message: 'La contraseña debe tener al menos 6 caracteres',
-            },
-          }}
-        />
-        {/* Enlace para recuperar contraseña */}
-        <TouchableOpacity
-          style={loginStyles.forgotPassword}
-          onPress={() => {
-            router.push('/(auth)/forgot-password');
-          }}
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={loginStyles.container}
+          keyboardShouldPersistTaps="handled"
         >
-          <Text style={loginStyles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
-        </TouchableOpacity>
+          <View style={loginStyles.logoContainer}>
+            <Image
+              source={require('../../../../assets/images/icon.png')}
+              style={loginStyles.logo}
+            />
+          </View>
 
-        {/* Botón de login */}
-        <FormButton
-          title="Iniciar Sesión"
-          onPress={handleSubmit(onSubmit)}
-          disabled={!isValid}
-          isLoading={isLoading}
-        />
+          <Text style={loginStyles.title}>Iniciar Sesión</Text>
 
-        {/* Enlace para registrarse */}
-        <View style={loginStyles.footer}>
-          <Text style={loginStyles.footerText}>¿No tienes una cuenta?</Text>
+          {/* Campo de email */}
+          <FormInputController<LoginFormValues>
+            control={control}
+            name="username"
+            label="Correo electrónico"
+            placeholder="john.doe@example.com"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            error={errors.username}
+            rules={{
+              required: 'El correo electrónico es obligatorio',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Correo electrónico inválido',
+              },
+            }}
+          />
+
+          {/* Campo de contraseña */}
+          <PasswordInputController<LoginFormValues>
+            control={control}
+            name="password"
+            label="Contraseña"
+            placeholder="**************"
+            error={errors.password}
+            rules={{
+              required: 'La contraseña es obligatoria',
+              minLength: {
+                value: 6,
+                message: 'La contraseña debe tener al menos 6 caracteres',
+              },
+            }}
+          />
+          {/* Enlace para recuperar contraseña */}
           <TouchableOpacity
+            style={loginStyles.forgotPassword}
             onPress={() => {
-              router.push('/(auth)/register');
+              router.push('/(auth)/forgot-password');
             }}
           >
-            <Text style={loginStyles.footerLink}>Regístrate</Text>
+            <Text style={loginStyles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
           </TouchableOpacity>
-        </View>
-      </ScrollView>
 
-      {/* Bottom Sheet para el selector de modo desarrollador */}
-      <CustomBottomSheet ref={bottomSheetRef} initialSnapPoints={['40%']}>
-        <DevModeSelector onClose={handleCloseDevModeSheet} />
-      </CustomBottomSheet>
+          {/* Botón de login */}
+          <FormButton
+            title="Iniciar Sesión"
+            onPress={handleSubmit(onSubmit)}
+            disabled={!isValid}
+            isLoading={isLoading}
+          />
+
+          {/* Enlace para registrarse */}
+          <View style={loginStyles.footer}>
+            <Text style={loginStyles.footerText}>¿No tienes una cuenta?</Text>
+            <TouchableOpacity
+              onPress={() => {
+                router.push('/(auth)/register');
+              }}
+            >
+              <Text style={loginStyles.footerLink}>Regístrate</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+
+        {/* Bottom Sheet para el selector de modo desarrollador */}
+        <CustomBottomSheet ref={bottomSheetRef} initialSnapPoints={['30%', '50%']}>
+          <DevModeSelector onClose={handleCloseDevModeSheet} />
+        </CustomBottomSheet>
+      </View>
     </SafeAreaView>
   );
 };
