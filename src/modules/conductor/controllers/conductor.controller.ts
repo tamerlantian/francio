@@ -14,7 +14,7 @@ export const conductorController = {
   },
 
   // Obtener lista de conductores para seleccionar
-  getConductoresSelector: async (params: ApiQueryParametros = {}): Promise<any> => {
+  getConductoresSelector: async (params: ApiQueryParametros = {}) => {
     try {
       const response = await ConductorRepository.getInstance().getConductoresSelector(params);
       return response;

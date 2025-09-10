@@ -55,3 +55,8 @@ export interface ConductorResponse {
   numero_licencia: string;
   telefono: string;
 }
+
+export interface ConductorSelector {
+  id: number;
+  nombre_corto: string;
+}

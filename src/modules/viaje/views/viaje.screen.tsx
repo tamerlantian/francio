@@ -3,16 +3,29 @@ import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { viajeStyles } from '../styles/viaje.style';
 import { useViaje } from '../view-models/viaje.view-model';
+import { useConductoresSelector } from '@/src/modules/conductor/view-models/conductor.view-model';
 import React, { useRef, useState } from 'react';
 import { ViajeCard } from '../components/viaje-card.component';
 import { Viaje } from '../interfaces/viaje.interface';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { AsignarViajeSheet } from '../components/asignar-viaje-sheet.component';
+import { useVehiculosSelector } from '@/src/modules/vehiculo/view-models/vehiculo.view-model';
 
 // Componente principal de la pantalla de viajes
 export default function ViajeScreen() {
-  // Utilizamos el ViewModel para obtener los datos
-  const { viajes, isLoading, isError, refetch } = useViaje();
+  // Utilizamos los ViewModels para obtener los datos
+  const {
+    viajes,
+    isLoading: isLoadingViajes,
+    isError: isErrorViajes,
+    refetch: refetchViajes,
+  } = useViaje();
+  const {
+    conductoresOptions,
+    isLoading: isLoadingConductores,
+    isError: isErrorConductores,
+  } = useConductoresSelector();
+  const { vehiculosOptions } = useVehiculosSelector();
 
   // Estado para el viaje seleccionado
   const [selectedViaje, setSelectedViaje] = useState<Viaje | null>(null);
@@ -21,22 +34,6 @@ export default function ViajeScreen() {
 
   // Referencia al bottom sheet
   const bottomSheetRef = useRef<BottomSheet>(null);
-
-  // Data mockeada para conductores
-  const conductoresOptions = [
-    { label: 'Juan Pérez - CC 12345678', value: '1' },
-    { label: 'María García - CC 87654321', value: '2' },
-    { label: 'Carlos López - CC 11223344', value: '3' },
-    { label: 'Ana Rodríguez - CC 44556677', value: '4' },
-  ];
-
-  // Data mockeada para vehículos
-  const vehiculosOptions = [
-    { label: 'ABC-123 - Chevrolet NPR', value: '1' },
-    { label: 'DEF-456 - Ford Cargo', value: '2' },
-    { label: 'GHI-789 - Isuzu NLR', value: '3' },
-    { label: 'JKL-012 - Mitsubishi Canter', value: '4' },
-  ];
 
   // Manejar la selección de un viaje
   const handleViajePress = (viaje: Viaje) => {
@@ -47,16 +44,20 @@ export default function ViajeScreen() {
   };
 
   // Manejar la aceptación del viaje
-  const handleAceptar = () => {
+  const handleAceptar = (formData: { conductor: string; vehiculo: string }) => {
     if (selectedViaje) {
       console.log('Viaje aceptado:', {
         viajeId: selectedViaje.datos.id,
-        conductor: selectedConductor,
-        vehiculo: selectedVehiculo,
+        conductor: formData.conductor,
+        vehiculo: formData.vehiculo,
       });
       bottomSheetRef.current?.close();
     }
   };
+
+  // Estado de carga combinado
+  const isLoading = isLoadingViajes || isLoadingConductores;
+  const isError = isErrorViajes || isErrorConductores;
 
   // Si está cargando, mostramos un indicador
   if (isLoading) {
@@ -76,7 +77,7 @@ export default function ViajeScreen() {
         <Text style={viajeStyles.emptyText}>Ocurrió un error al cargar los viajes</Text>
         <TouchableOpacity
           style={{ marginTop: 16, padding: 10, backgroundColor: '#0066cc', borderRadius: 8 }}
-          onPress={() => refetch()}
+          onPress={() => refetchViajes()}
         >
           <Text style={{ color: 'white' }}>Intentar nuevamente</Text>
         </TouchableOpacity>

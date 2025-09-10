@@ -1,6 +1,6 @@
 import { ApiQueryParametros, ApiResponse } from '@/src/core/interfaces/api.interface';
 import { HttpBaseRepository } from '../../../core/repositories/http-base.repository';
-import { ConductorResponse } from '../interfaces/conductor.interface';
+import { ConductorResponse, ConductorSelector } from '../interfaces/conductor.interface';
 
 /**
  * Repositorio para manejar las operaciones de API relacionadas con conductores
@@ -32,7 +32,7 @@ export class ConductorRepository extends HttpBaseRepository {
    * @param params Parámetros de consulta opcionales
    * @returns Promise con la respuesta de conductores
    */
-  async getConductores(params: ApiQueryParametros = {}): Promise<any> {
+  async getConductores(params: ApiQueryParametros = {}) {
     return this.get<ApiResponse<ConductorResponse>>('vertical/conductor/', params);
   }
 
@@ -41,7 +41,7 @@ export class ConductorRepository extends HttpBaseRepository {
    * @param params Parámetros de consulta opcionales
    * @returns Promise con la respuesta de conductores
    */
-  async getConductoresSelector(params: ApiQueryParametros = {}): Promise<any> {
-    return this.get<ApiResponse<ConductorResponse>>('vertical/conductor/seleccionar/', params);
+  async getConductoresSelector(params: ApiQueryParametros = {}) {
+    return this.get<ConductorSelector[]>('vertical/conductor/seleccionar/', params);
   }
 }

@@ -6,6 +6,7 @@ export const conductorKeys = {
   all: ['conductores'] as const,
   list: () => [...conductorKeys.all, 'list'] as const,
   detail: (id: string) => [...conductorKeys.all, 'detail', id] as const,
+  selector: () => [...conductorKeys.all, 'selector'] as const,
 };
 
 export const useConductor = () => {
@@ -41,5 +42,31 @@ export const useConductorById = (id: string) => {
     isLoading,
     isError,
     error,
+  };
+};
+
+/**
+ * Hook para obtener la lista de conductores para el selector
+ */
+export const useConductoresSelector = () => {
+  // Query para obtener la lista de conductores para el selector
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey: conductorKeys.selector(),
+    queryFn: () => conductorController.getConductoresSelector(),
+  });
+
+  // Transformar los datos al formato esperado por el selector
+  const conductoresOptions =
+    data?.map(conductor => ({
+      label: `${conductor.nombre_corto}`,
+      value: conductor.id.toString(),
+    })) || [];
+
+  return {
+    conductoresOptions,
+    isLoading,
+    isError,
+    error,
+    refetch,
   };
 };

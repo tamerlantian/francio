@@ -1,10 +1,16 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Viaje } from '../interfaces/viaje.interface';
 import CustomBottomSheet from '@/src/shared/components/bottom-sheet/bottom-sheet';
-import { FormSelector } from '@/src/shared/components/ui/form/FormSelector';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
+import { useForm } from 'react-hook-form';
+import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
+
+interface FormValues {
+  conductor: string;
+  vehiculo: string;
+}
 
 interface AsignarViajeSheetProps {
   viaje: Viaje | null;
@@ -12,7 +18,7 @@ interface AsignarViajeSheetProps {
   selectedVehiculo: string;
   onConductorChange: (_value: string) => void;
   onVehiculoChange: (_value: string) => void;
-  onAceptar: () => void;
+  onAceptar: (_data: FormValues) => void;
   conductoresOptions: { label: string; value: string }[];
   vehiculosOptions: { label: string; value: string }[];
 }
@@ -31,6 +37,48 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
     },
     ref,
   ) => {
+    // Configuración de React Hook Form
+    const {
+      control,
+      handleSubmit,
+      formState: { errors, isValid },
+      setValue,
+      watch,
+    } = useForm<FormValues>({
+      defaultValues: {
+        conductor: selectedConductor,
+        vehiculo: selectedVehiculo,
+      },
+      mode: 'onChange',
+    });
+
+    // Observar cambios en los campos para actualizar el estado externo
+    const conductorValue = watch('conductor');
+    const vehiculoValue = watch('vehiculo');
+
+    useEffect(() => {
+      if (conductorValue !== selectedConductor) {
+        onConductorChange(conductorValue);
+      }
+    }, [conductorValue, selectedConductor, onConductorChange]);
+
+    useEffect(() => {
+      if (vehiculoValue !== selectedVehiculo) {
+        onVehiculoChange(vehiculoValue);
+      }
+    }, [vehiculoValue, selectedVehiculo, onVehiculoChange]);
+
+    // Actualizar valores del formulario cuando cambian las props
+    useEffect(() => {
+      setValue('conductor', selectedConductor);
+      setValue('vehiculo', selectedVehiculo);
+    }, [selectedConductor, selectedVehiculo, setValue]);
+
+    // Manejar el envío del formulario
+    const onSubmit = (data: FormValues) => {
+      onAceptar(data);
+    };
+
     if (!viaje) return null;
 
     return (
@@ -44,37 +92,33 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
           </View>
 
           <View style={styles.selectorsContainer}>
-            <FormSelector
+            <FormSelectorController
+              control={control}
+              name="conductor"
               label="Conductor"
               placeholder="Seleccionar conductor"
               options={conductoresOptions}
-              value={selectedConductor}
-              onValueChange={onConductorChange}
+              error={errors.conductor}
+              rules={{ required: 'El conductor es obligatorio' }}
             />
 
-            <FormSelector
+            <FormSelectorController
+              control={control}
+              name="vehiculo"
               label="Vehículo"
               placeholder="Seleccionar vehículo"
               options={vehiculosOptions}
-              value={selectedVehiculo}
-              onValueChange={onVehiculoChange}
+              error={errors.vehiculo}
+              rules={{ required: 'El vehículo es obligatorio' }}
             />
           </View>
 
           <TouchableOpacity
-            style={[
-              styles.acceptButton,
-              (!selectedConductor || !selectedVehiculo) && styles.acceptButtonDisabled,
-            ]}
-            onPress={onAceptar}
-            disabled={!selectedConductor || !selectedVehiculo}
+            style={[styles.acceptButton, !isValid && styles.acceptButtonDisabled]}
+            onPress={handleSubmit(onSubmit)}
+            disabled={!isValid}
           >
-            <Text
-              style={[
-                styles.acceptButtonText,
-                (!selectedConductor || !selectedVehiculo) && styles.acceptButtonTextDisabled,
-              ]}
-            >
+            <Text style={[styles.acceptButtonText, !isValid && styles.acceptButtonTextDisabled]}>
               Aceptar Viaje
             </Text>
           </TouchableOpacity>
