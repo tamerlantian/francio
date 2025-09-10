@@ -33,3 +33,25 @@ export interface Conductor {
   comentario: string | null;
   conductor: boolean;
 }
+
+export interface ConductorResponse {
+  apellido1: string;
+  apellido2: string;
+  barrio: string;
+  categoria_licencia: number;
+  categoria_licencia__nombre: string;
+  celular: string;
+  ciudad: number;
+  ciudad__nombre: string;
+  correo: string;
+  direccion: string;
+  fecha_vence_licencia: string;
+  id: number;
+  identificacion: number;
+  nombre1: string;
+  nombre2: string;
+  nombre_corto: string;
+  numero_identificacion: string;
+  numero_licencia: string;
+  telefono: string;
+}

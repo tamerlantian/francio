@@ -12,7 +12,7 @@ export const useViaje = () => {
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: viajeKeys.list(),
     queryFn: () =>
-      viajeController.getViajes({ estado_aceptado: 'Fasle', solicitud_transporte: 'True' }),
+      viajeController.getViajes({ estado_aceptado: 'False', solicitud_transporte: 'True' }),
   });
 
   return {

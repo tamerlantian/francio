@@ -21,6 +21,7 @@ export interface Datos {
   empaque__nombre: string;
   usuario_id: number;
   usuario__nombre_corto: string;
+  pago: number;
 }
 
 export interface Viaje {

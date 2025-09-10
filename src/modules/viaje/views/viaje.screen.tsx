@@ -3,13 +3,60 @@ import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { viajeStyles } from '../styles/viaje.style';
 import { useViaje } from '../view-models/viaje.view-model';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { ViajeCard } from '../components/viaje-card.component';
+import { Viaje } from '../interfaces/viaje.interface';
+import BottomSheet from '@gorhom/bottom-sheet';
+import { AsignarViajeSheet } from '../components/asignar-viaje-sheet.component';
 
 // Componente principal de la pantalla de viajes
 export default function ViajeScreen() {
   // Utilizamos el ViewModel para obtener los datos
   const { viajes, isLoading, isError, refetch } = useViaje();
+
+  // Estado para el viaje seleccionado
+  const [selectedViaje, setSelectedViaje] = useState<Viaje | null>(null);
+  const [selectedConductor, setSelectedConductor] = useState('');
+  const [selectedVehiculo, setSelectedVehiculo] = useState('');
+
+  // Referencia al bottom sheet
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  // Data mockeada para conductores
+  const conductoresOptions = [
+    { label: 'Juan Pérez - CC 12345678', value: '1' },
+    { label: 'María García - CC 87654321', value: '2' },
+    { label: 'Carlos López - CC 11223344', value: '3' },
+    { label: 'Ana Rodríguez - CC 44556677', value: '4' },
+  ];
+
+  // Data mockeada para vehículos
+  const vehiculosOptions = [
+    { label: 'ABC-123 - Chevrolet NPR', value: '1' },
+    { label: 'DEF-456 - Ford Cargo', value: '2' },
+    { label: 'GHI-789 - Isuzu NLR', value: '3' },
+    { label: 'JKL-012 - Mitsubishi Canter', value: '4' },
+  ];
+
+  // Manejar la selección de un viaje
+  const handleViajePress = (viaje: Viaje) => {
+    setSelectedViaje(viaje);
+    setSelectedConductor('');
+    setSelectedVehiculo('');
+    bottomSheetRef.current?.expand();
+  };
+
+  // Manejar la aceptación del viaje
+  const handleAceptar = () => {
+    if (selectedViaje) {
+      console.log('Viaje aceptado:', {
+        viajeId: selectedViaje.datos.id,
+        conductor: selectedConductor,
+        vehiculo: selectedVehiculo,
+      });
+      bottomSheetRef.current?.close();
+    }
+  };
 
   // Si está cargando, mostramos un indicador
   if (isLoading) {
@@ -38,10 +85,7 @@ export default function ViajeScreen() {
   }
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: '#f5f5f5' }}
-      edges={['left', 'right', 'bottom']}
-    >
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f5f5' }} edges={['left', 'right']}>
       <View style={viajeStyles.container}>
         <View style={viajeStyles.header}>
           <Text style={viajeStyles.title}>Viajes</Text>
@@ -51,7 +95,7 @@ export default function ViajeScreen() {
           <FlatList
             data={viajes}
             keyExtractor={item => item.datos.id.toString()}
-            renderItem={({ item }) => <ViajeCard viaje={item} />}
+            renderItem={({ item }) => <ViajeCard viaje={item} onPress={handleViajePress} />}
             showsVerticalScrollIndicator={false}
           />
         ) : (
@@ -61,17 +105,18 @@ export default function ViajeScreen() {
           </View>
         )}
 
-        {/* Botón flotante para agregar un nuevo viaje */}
-        <TouchableOpacity
-          style={viajeStyles.addButton}
-          onPress={() => {
-            // Aquí se puede navegar a la pantalla de crear viaje
-            // router.push('/viaje/nuevo');
-            console.log('Crear nuevo viaje');
-          }}
-        >
-          <Ionicons name="add" size={24} color="white" />
-        </TouchableOpacity>
+        {/* Bottom Sheet para asignar viaje */}
+        <AsignarViajeSheet
+          ref={bottomSheetRef}
+          viaje={selectedViaje}
+          selectedConductor={selectedConductor}
+          selectedVehiculo={selectedVehiculo}
+          onConductorChange={setSelectedConductor}
+          onVehiculoChange={setSelectedVehiculo}
+          onAceptar={handleAceptar}
+          conductoresOptions={conductoresOptions}
+          vehiculosOptions={vehiculosOptions}
+        />
       </View>
     </SafeAreaView>
   );

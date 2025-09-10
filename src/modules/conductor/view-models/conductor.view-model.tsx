@@ -16,7 +16,7 @@ export const useConductor = () => {
   });
 
   return {
-    conductores: data?.conductores || [],
+    conductores: data?.results || [],
     total: data?.total || 0,
     isLoading,
     isError,
