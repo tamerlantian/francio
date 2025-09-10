@@ -18,7 +18,7 @@ export const ViajeCard = ({ viaje, onPress }: ViajeCardProps) => {
   };
 
   return (
-    <TouchableOpacity style={viajeStyles.travelCard} onPressIn={handleCardPress}>
+    <TouchableOpacity style={viajeStyles.travelCard} onPress={handleCardPress}>
       {/* Travel Header */}
       <View style={viajeStyles.travelHeader}>
         <View style={viajeStyles.travelRouteContainer}>
