@@ -34,8 +34,6 @@ export default function ViajeScreen() {
 
   // Estado para el viaje seleccionado
   const [selectedViaje, setSelectedViaje] = useState<Viaje | null>(null);
-  const [selectedConductor, setSelectedConductor] = useState('');
-  const [selectedVehiculo, setSelectedVehiculo] = useState('');
 
   // Referencia al bottom sheet
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -43,8 +41,7 @@ export default function ViajeScreen() {
   // Manejar la selección de un viaje
   const handleViajePress = (viaje: Viaje) => {
     setSelectedViaje(viaje);
-    setSelectedConductor('');
-    setSelectedVehiculo('');
+    console.log(selectedViaje);
     bottomSheetRef.current?.expand();
   };
 
@@ -123,10 +120,6 @@ export default function ViajeScreen() {
         <AsignarViajeSheet
           ref={bottomSheetRef}
           viaje={selectedViaje}
-          selectedConductor={selectedConductor}
-          selectedVehiculo={selectedVehiculo}
-          onConductorChange={setSelectedConductor}
-          onVehiculoChange={setSelectedVehiculo}
           onAceptar={handleAceptar}
           conductoresOptions={conductoresOptions}
           vehiculosOptions={vehiculosOptions}

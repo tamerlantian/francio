@@ -5,10 +5,9 @@ export const viajeStyles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 14,
     paddingTop: 0,
-    marginTop: 15, // Add negative margin to pull content up
   },
   header: {
-    marginBottom: 15, // Further reduced from 8
+    paddingVertical: 15, // Further reduced from 8
   },
   title: {
     fontSize: 24,

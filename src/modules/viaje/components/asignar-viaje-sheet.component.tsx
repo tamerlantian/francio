@@ -17,20 +17,13 @@ export interface AsignarViajeFormValues {
 
 interface AsignarViajeSheetProps {
   viaje: Viaje | null;
-  selectedConductor: string;
-  selectedVehiculo: string;
-  onConductorChange: (_value: string) => void;
-  onVehiculoChange: (_value: string) => void;
   onAceptar: (_data: AsignarViajeFormValues) => void;
   conductoresOptions: { label: string; value: string }[];
   vehiculosOptions: { label: string; value: string }[];
 }
 
 export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>(
-  (
-    { viaje, selectedConductor, selectedVehiculo, onAceptar, conductoresOptions, vehiculosOptions },
-    ref,
-  ) => {
+  ({ viaje, onAceptar, conductoresOptions, vehiculosOptions }, ref) => {
     // Configuración de React Hook Form
     const {
       control,
@@ -39,8 +32,8 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
     } = useForm<AsignarViajeFormValues>({
       defaultValues: {
         viaje_id: viaje?.datos.id || 0,
-        conductor_id: selectedConductor,
-        vehiculo_id: selectedVehiculo,
+        conductor_id: '',
+        vehiculo_id: '',
       },
       mode: 'onChange',
     });
