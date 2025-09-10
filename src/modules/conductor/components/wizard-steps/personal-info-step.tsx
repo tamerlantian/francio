@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import { FormInputController } from '../../../../shared/components/ui/form/FormInputController';
+import { FormSelectorController } from '../../../../shared/components/ui/form/FormSelectorController';
+import { Option } from '../../../../shared/components/ui/form/FormSelector';
 import { Conductor } from '../../interfaces/conductor.interface';
 
 interface PersonalInfoStepProps {
@@ -9,6 +11,16 @@ interface PersonalInfoStepProps {
   onDataChange: (_data: Partial<Conductor>) => void;
   onValidationChange: (_isValid: boolean) => void;
 }
+
+// Opciones de tipo de identificación
+const tipoIdentificacionOptions: Option[] = [
+  { label: 'Cédula de Ciudadanía', value: '1' },
+  { label: 'Cédula de Extranjería', value: '2' },
+  { label: 'Pasaporte', value: '3' },
+  { label: 'Tarjeta de Identidad', value: '4' },
+  { label: 'Registro Civil', value: '5' },
+  { label: 'NIT', value: '6' },
+];
 
 export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
   data,
@@ -25,6 +37,7 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
   } = useForm<Partial<Conductor>>({
     mode: 'onChange',
     defaultValues: {
+      identificacion: data.identificacion || undefined,
       numero_identificacion: data.numero_identificacion || '',
       nombre1: data.nombre1 || '',
       nombre2: data.nombre2 || '',
@@ -66,6 +79,17 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <Text style={styles.description}>Ingresa la información personal básica del conductor</Text>
+
+      {/* Tipo de Identificación */}
+      <FormSelectorController
+        control={control}
+        name="identificacion"
+        label="Tipo de Identificación *"
+        placeholder="Selecciona el tipo de identificación"
+        options={tipoIdentificacionOptions}
+        error={errors.identificacion}
+        rules={{ required: 'Este campo es obligatorio' }}
+      />
 
       {/* Número de Identificación */}
       <FormInputController

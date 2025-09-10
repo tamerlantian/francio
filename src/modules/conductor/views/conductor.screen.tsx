@@ -1,14 +1,14 @@
+import CustomBottomSheet from '@/src/shared/components/bottom-sheet/bottom-sheet';
+import { Ionicons } from '@expo/vector-icons';
+import BottomSheet from '@gorhom/bottom-sheet';
+import { useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useConductor } from '../view-models/conductor.view-model';
-import { conductorStyles } from '../styles/conductor.style';
-import { Ionicons } from '@expo/vector-icons';
 import { ConductorCard } from '../components/conductor-card';
-import { useRef, useState } from 'react';
-import BottomSheet from '@gorhom/bottom-sheet';
-import CustomBottomSheet from '@/src/shared/components/bottom-sheet/bottom-sheet';
 import ConductorFormulario from '../components/conductor-formulario';
 import { Conductor } from '../interfaces/conductor.interface';
+import { conductorStyles } from '../styles/conductor.style';
+import { useConductor } from '../view-models/conductor.view-model';
 // Componente principal de la pantalla de conductores
 export default function ConductorScreen() {
   // Utilizamos el ViewModel para obtener los datos
