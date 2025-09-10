@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { viajeController } from '../controllers/viaje.controller';
 import { useToast } from '@/src/shared/hooks/use-toast.hook';
+import { ApiErrorResponse } from '@/src/core/interfaces/api.interface';
 
 export const viajeKeys = {
   all: ['viajes'] as const,
@@ -53,8 +54,9 @@ export const useAceptarViaje = () => {
       queryClient.invalidateQueries({ queryKey: viajeKeys.list() });
       toast.success('Viaje aceptado exitosamente');
     },
-    onError: () => {
-      toast.error('Error al aceptar el viaje');
+    onError: (error: unknown) => {
+      const errorParsed = error as ApiErrorResponse;
+      toast.error(errorParsed?.mensaje || 'Error al aceptar el viaje');
     },
   });
 

@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 import { Viaje } from '../interfaces/viaje.interface';
 import { FormButton } from '@/src/shared/components/ui/button/FormButton';
-import { useAceptarViaje } from '../view-models/viaje.view-model';
 
 export interface AsignarViajeFormValues {
   conductor_id: string;
@@ -18,16 +17,19 @@ export interface AsignarViajeFormValues {
 interface AsignarViajeSheetProps {
   viaje: Viaje | null;
   onAceptar: (_data: AsignarViajeFormValues) => void;
+  onClose?: () => void;
   conductoresOptions: { label: string; value: string }[];
   vehiculosOptions: { label: string; value: string }[];
+  isLoading?: boolean;
 }
 
 export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>(
-  ({ viaje, onAceptar, conductoresOptions, vehiculosOptions }, ref) => {
+  ({ viaje, onAceptar, onClose, conductoresOptions, vehiculosOptions, isLoading = false }, ref) => {
     // Configuración de React Hook Form
     const {
       control,
       handleSubmit,
+      reset,
       formState: { errors, isValid },
     } = useForm<AsignarViajeFormValues>({
       defaultValues: {
@@ -37,18 +39,24 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
       },
       mode: 'onChange',
     });
-    const { isLoading } = useAceptarViaje();
+    // Ya no necesitamos este hook aquí porque recibimos isLoading como prop
+    // Esto asegura que el estado de carga esté sincronizado con la acción real
 
     // Manejar el envío del formulario
     const onSubmit = (data: AsignarViajeFormValues) => {
       onAceptar(data);
     };
 
+    const onCloseSheet = () => {
+      onClose?.();
+      reset();
+    };
+
     // En lugar de retornar null, mostramos el componente con un estado de carga o vacío
     // Esto evita que el bottom sheet se cierre cuando viaje es null inicialmente
 
     return (
-      <CustomBottomSheet ref={ref} initialSnapPoints={['30%', '50%']}>
+      <CustomBottomSheet ref={ref} initialSnapPoints={['30%', '50%']} onDismiss={onCloseSheet}>
         <View style={styles.bottomSheetContent}>
           <Text style={styles.bottomSheetTitle}>Asignar Viaje</Text>
           <View style={styles.bottomSheetSubtitleContainer}>
@@ -126,7 +134,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   selectorsContainer: {
-    marginBottom: 24,
+    marginBottom: 14,
   },
   acceptButton: {
     backgroundColor: '#0066cc',

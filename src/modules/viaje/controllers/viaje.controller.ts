@@ -21,7 +21,6 @@ export const viajeController = {
         conductorId,
         vehiculoId,
       );
-      console.log(response);
       return response;
     } catch (error) {
       throw error;

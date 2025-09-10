@@ -45,8 +45,6 @@ export default function ConductorScreen() {
     setIsFormLoading(true);
     try {
       // TODO: Implementar la lógica de guardado/actualización
-      console.log('Datos del formulario:', data);
-      console.log('Modo:', formMode);
 
       // Simular una operación async
       await new Promise(resolve => setTimeout(resolve, 1000));

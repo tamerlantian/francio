@@ -32,7 +32,7 @@ export default function ViajeScreen() {
   } = useConductoresSelector();
   const { vehiculosOptions } = useVehiculosSelector();
   // Usar el hook para aceptar viajes
-  const { aceptarViaje } = useAceptarViaje();
+  const { aceptarViaje, isLoading: isLoadingAceptar } = useAceptarViaje();
 
   // Estado para el viaje seleccionado
   const [selectedViaje, setSelectedViaje] = useState<Viaje | null>(null);
@@ -52,6 +52,11 @@ export default function ViajeScreen() {
       bottomSheetRef.current?.expand();
     }
   }, [selectedViaje]);
+
+  // Función para limpiar el viaje seleccionado cuando se cierra el bottom sheet
+  const handleBottomSheetClose = () => {
+    setSelectedViaje(null);
+  };
 
   // Función para manejar el pull-to-refresh
   const handleRefresh = () => {
@@ -134,8 +139,10 @@ export default function ViajeScreen() {
           ref={bottomSheetRef}
           viaje={selectedViaje}
           onAceptar={handleAceptar}
+          onClose={handleBottomSheetClose}
           conductoresOptions={conductoresOptions}
           vehiculosOptions={vehiculosOptions}
+          isLoading={isLoadingAceptar}
         />
       </View>
     </SafeAreaView>

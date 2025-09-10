@@ -11,6 +11,7 @@ interface CustomBottomSheetProps extends Partial<BottomSheetProps> {
   initialSnapPoints?: string[];
   showsScrollIndicator?: boolean;
   useScrollView?: boolean;
+  onDismiss?: () => void;
 }
 
 const CustomBottomSheet = forwardRef<BottomSheet, CustomBottomSheetProps>(
@@ -20,6 +21,7 @@ const CustomBottomSheet = forwardRef<BottomSheet, CustomBottomSheetProps>(
       initialSnapPoints = ['25%', '50%', '75%'],
       showsScrollIndicator = false,
       useScrollView = true,
+      onDismiss,
       ...rest
     },
     ref,
@@ -60,6 +62,7 @@ const CustomBottomSheet = forwardRef<BottomSheet, CustomBottomSheetProps>(
         backdropComponent={renderBackdrop}
         handleIndicatorStyle={styles.indicator}
         backgroundStyle={styles.background}
+        onClose={onDismiss}
         {...rest}
       >
         {renderContent()}

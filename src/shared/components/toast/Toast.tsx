@@ -36,35 +36,39 @@ const Toast: React.FC<ToastProps> = ({ type, message, onClose, placement = 'bott
 
   // Animación de entrada y salida
   useEffect(() => {
-    // Animación de entrada
-    Animated.parallel([
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(translateY, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(scale, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start();
+    // Usar requestAnimationFrame para evitar conflictos con el render
+    const animateIn = () => {
+      // Animación de entrada
+      Animated.parallel([
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateY, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        // Añadir un pequeño rebote al final de la animación
+        Animated.spring(scale, {
+          toValue: 1,
+          friction: 8,
+          tension: 40,
+          useNativeDriver: true,
+        }).start();
+      });
+    };
 
-    // Añadir un pequeño rebote al final de la animación
-    setTimeout(() => {
-      Animated.spring(scale, {
-        toValue: 1,
-        friction: 8,
-        tension: 40,
-        useNativeDriver: true,
-      }).start();
-    }, 300);
-  }, []);
+    // Usar requestAnimationFrame para evitar el warning de useInsertionEffect
+    requestAnimationFrame(animateIn);
+  }, [opacity, translateY, scale]);
 
   // Obtener el estilo según el tipo de toast
   const getContainerStyle = () => {
