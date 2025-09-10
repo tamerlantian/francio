@@ -44,16 +44,21 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
       onAceptar(data);
     };
 
-    if (!viaje) return null;
+    // En lugar de retornar null, mostramos el componente con un estado de carga o vacío
+    // Esto evita que el bottom sheet se cierre cuando viaje es null inicialmente
 
     return (
       <CustomBottomSheet ref={ref} initialSnapPoints={['30%', '50%']}>
         <View style={styles.bottomSheetContent}>
           <Text style={styles.bottomSheetTitle}>Asignar Viaje</Text>
           <View style={styles.bottomSheetSubtitleContainer}>
-            <Text style={styles.bottomSheetSubtitle}>{viaje.datos.ciudad_origen__nombre}</Text>
+            <Text style={styles.bottomSheetSubtitle}>
+              {viaje?.datos?.ciudad_origen__nombre || 'Cargando...'}
+            </Text>
             <Ionicons name="arrow-forward" size={16} color="#0066cc" style={styles.arrowIcon} />
-            <Text style={styles.bottomSheetSubtitle}>{viaje.datos.ciudad_destino__nombre}</Text>
+            <Text style={styles.bottomSheetSubtitle}>
+              {viaje?.datos?.ciudad_destino__nombre || 'Cargando...'}
+            </Text>
           </View>
 
           <View style={styles.selectorsContainer}>

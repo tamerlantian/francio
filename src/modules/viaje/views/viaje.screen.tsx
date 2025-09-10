@@ -2,7 +2,7 @@ import { useConductoresSelector } from '@/src/modules/conductor/view-models/cond
 import { useVehiculosSelector } from '@/src/modules/vehiculo/view-models/vehiculo.view-model';
 import { Ionicons } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -40,10 +40,16 @@ export default function ViajeScreen() {
 
   // Manejar la selección de un viaje
   const handleViajePress = (viaje: Viaje) => {
+    // Simplemente actualizamos el estado
     setSelectedViaje(viaje);
-    console.log(selectedViaje);
-    bottomSheetRef.current?.expand();
   };
+
+  // useEffect para expandir el bottom sheet cuando selectedViaje cambia
+  useEffect(() => {
+    if (selectedViaje) {
+      bottomSheetRef.current?.expand();
+    }
+  }, [selectedViaje]);
 
   // Manejar la aceptación del viaje
   const handleAceptar = (formData: AsignarViajeFormValues) => {
