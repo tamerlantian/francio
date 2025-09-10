@@ -116,11 +116,13 @@ export default function ViajeScreen() {
           renderItem={({ item }) => <ViajeCard viaje={item} onPress={handleViajePress} />}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <EmptyState
-              icon="car-outline"
-              title="No tienes viajes disponibles"
-              subtitle="Desliza hacia abajo para actualizar"
-            />
+            <View style={{ flex: 1, justifyContent: 'center', minHeight: 300 }}>
+              <EmptyState
+                icon="car-outline"
+                title="No tienes viajes disponibles"
+                subtitle="Desliza hacia abajo para actualizar"
+              />
+            </View>
           }
           refreshControl={
             <RefreshControl

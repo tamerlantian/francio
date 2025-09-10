@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   bottomSheetSubtitleContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 24,
+    marginBottom: 8,
   },
   arrowIcon: {
     marginHorizontal: 8,
