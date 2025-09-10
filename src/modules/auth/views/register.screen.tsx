@@ -5,15 +5,15 @@ import { FormInputController } from '@/src/shared/components/ui/form/FormInputCo
 import { PasswordInputController } from '@/src/shared/components/ui/form/PasswordInputController';
 import { Ionicons } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
+import Checkbox from 'expo-checkbox';
 import { router } from 'expo-router';
 import React, { useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Checkbox from 'expo-checkbox';
 import { RegisterFormValues } from '../interfaces/auth.interface';
 import { loginStyles } from '../styles/login.style';
-import { useRegister } from '../view-models/auth.view-model';
+import { useRegister } from '../view-models/register.view-model';
 
 export const RegisterScreen = () => {
   // ViewModel para registro
