@@ -90,12 +90,8 @@ export const authController = {
   isAuthenticated: async (): Promise<boolean> => {
     try {
       const token = await AsyncStorage.getItem(AUTH_TOKEN_KEY);
-      if (!token) return false;
-
-      // Validar token con el servidor
-      return true;
-    } catch (error) {
-      console.error('Error al verificar autenticación:', error);
+      return !!token; // Simple: si hay token, está autenticado
+    } catch {
       return false;
     }
   },

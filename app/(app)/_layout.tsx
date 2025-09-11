@@ -49,9 +49,9 @@ export default function AppLayout() {
     );
   }
 
-  // Only render the protected content if authenticated
+  // Don't render anything if not authenticated - let index.tsx handle navigation
   if (!isAuthenticated) {
-    return null; // Don't render anything while redirecting
+    return null;
   }
 
   return (
