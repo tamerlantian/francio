@@ -56,7 +56,7 @@ export default function AppLayout() {
   return (
     <Drawer
       screenOptions={{
-        headerShown: true,
+        // headerShown: true,
         drawerType: 'front',
         drawerStyle: {
           width: '70%',
@@ -71,9 +71,9 @@ export default function AppLayout() {
       <Drawer.Screen
         name="(tabs)"
         options={{
-          drawerLabel: 'Dashboard',
-          headerShown: true,
-          headerTitle: '',
+          drawerLabel: 'Inicio',
+          // headerShown: true,
+          // headerTitle: '',
         }}
       />
 
@@ -81,8 +81,8 @@ export default function AppLayout() {
         name="(conductor)"
         options={{
           drawerLabel: 'Conductores',
-          headerShown: true,
-          headerTitle: '',
+          // headerShown: true,
+          // headerTitle: '',
         }}
       />
     </Drawer>

@@ -7,14 +7,14 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          headerShown: false,
+          // headerShown: false,
           tabBarIcon: ({ color, size }) => <House size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="viaje"
         options={{
-          headerShown: false,
+          // headerShown: false,
           tabBarIcon: ({ color, size }) => <Package size={size} color={color} />,
         }}
       />
