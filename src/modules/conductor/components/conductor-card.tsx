@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Conductor, ConductorResponse } from '../interfaces/conductor.interface';
+import { ConductorResponse } from '../interfaces/conductor.interface';
 import { conductorStyles } from '../styles/conductor.style';
 
 // Función para formatear fecha de vencimiento
@@ -16,19 +15,6 @@ const formatExpirationDate = (dateString: string | null | undefined) => {
   if (diffDays <= 30) return `${diffDays}d`;
   if (diffDays <= 365) return `${Math.ceil(diffDays / 30)}m`;
   return `${Math.ceil(diffDays / 365)}a`;
-};
-
-// Función para determinar el color del estado de la licencia
-const getLicenseStatusColor = (dateString: string | null | undefined) => {
-  if (!dateString) return '#f5222d';
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffTime = date.getTime() - now.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays < 0) return '#f5222d'; // Rojo - vencida
-  if (diffDays <= 30) return '#fa8c16'; // Naranja - próxima a vencer
-  return '#52c41a'; // Verde - vigente
 };
 
 interface ConductorCardProps {
