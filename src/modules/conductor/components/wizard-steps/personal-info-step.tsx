@@ -1,25 +1,22 @@
 import { useSeleccionarIdentificacion } from '@/src/modules/vertical/hooks/use-vertical.hook';
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
 import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
-import React, { useCallback, useEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { Control, FieldErrors, useWatch } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import { Conductor } from '../../interfaces/conductor.interface';
 
 interface PersonalInfoStepProps {
-  data: Partial<Conductor>;
-  onDataChange: (_data: Partial<Conductor>) => void;
+  control: Control<Partial<Conductor>>;
+  errors: FieldErrors<Partial<Conductor>>;
   onValidationChange: (_isValid: boolean) => void;
 }
 
 export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
-  data,
-  onDataChange,
+  control,
+  errors,
   onValidationChange,
 }) => {
-  // Use a ref to prevent initial render updates
-  const isInitialRender = useRef(true);
-
   // Identification selector data
   const {
     identificacionOptions,
@@ -27,51 +24,37 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
     error: errorIdentificacion,
     refetch: refetchIdentificacion,
   } = useSeleccionarIdentificacion();
-  const {
+
+  // Watch form values for validation
+  const watchedValues = useWatch({
     control,
-    formState: { errors, isValid },
-    handleSubmit,
-  } = useForm<Partial<Conductor>>({
-    mode: 'onChange',
-    defaultValues: {
-      identificacion: data.identificacion || undefined,
-      numero_identificacion: data.numero_identificacion || '',
-      nombre1: data.nombre1 || '',
-      nombre2: data.nombre2 || '',
-      apellido1: data.apellido1 || '',
-      apellido2: data.apellido2 || '',
-      nombre_corto: data.nombre_corto || '',
-    },
+    name: ['identificacion', 'nombre1', 'apellido1', 'numero_identificacion'],
   });
 
-  // Memoize the submit handler to prevent it from changing on each render
-  const onSubmit = useCallback(
-    (formData: Partial<Conductor>) => {
-      onDataChange(formData);
-    },
-    [onDataChange],
-  );
-
-  // Only update parent when form values actually change, not on every render
+  // Notify parent of validation changes based on form errors and required values
   useEffect(() => {
-    // Skip the initial render to prevent update loops
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
-    }
+    const personalInfoFields = ['identificacion', 'nombre1', 'apellido1', 'numero_identificacion'];
 
-    // Use handleSubmit to properly process the form data
-    const timeoutId = setTimeout(() => {
-      handleSubmit(onSubmit)();
-    }, 100); // Small delay to prevent rapid updates
+    // Check for errors
+    const hasErrors = personalInfoFields.some(field => errors[field as keyof Partial<Conductor>]);
 
-    return () => clearTimeout(timeoutId);
-  }, [handleSubmit, onSubmit, isValid]); // Only run when validation changes
+    // Check if required fields have values
+    const hasRequiredValues = personalInfoFields.every((field, index) => {
+      const value = watchedValues[index];
+      return value && value.toString().trim() !== '';
+    });
 
-  // Update validation status
-  useEffect(() => {
+    const isValid = !hasErrors && hasRequiredValues;
     onValidationChange(isValid);
-  }, [isValid, onValidationChange]);
+  }, [
+    errors,
+    errors.apellido1,
+    errors.identificacion,
+    errors.nombre1,
+    errors.numero_identificacion,
+    watchedValues,
+    onValidationChange,
+  ]);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>

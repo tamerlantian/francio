@@ -1,25 +1,22 @@
 import { useSeleccionarCiudad } from '@/src/modules/vertical/hooks/use-vertical.hook';
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
 import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
-import React, { useCallback, useEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { Control, FieldErrors, useWatch } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import { Conductor } from '../../interfaces/conductor.interface';
 
 interface ContactInfoStepProps {
-  data: Partial<Conductor>;
-  onDataChange: (_data: Partial<Conductor>) => void;
+  control: Control<Partial<Conductor>>;
+  errors: FieldErrors<Partial<Conductor>>;
   onValidationChange: (_isValid: boolean) => void;
 }
 
 export const ContactInfoStep: React.FC<ContactInfoStepProps> = ({
-  data,
-  onDataChange,
+  control,
+  errors,
   onValidationChange,
 }) => {
-  // Use a ref to prevent initial render updates
-  const isInitialRender = useRef(true);
-
   // Ciudad selector data
   const {
     ciudadOptions,
@@ -28,51 +25,28 @@ export const ContactInfoStep: React.FC<ContactInfoStepProps> = ({
     refetch: refetchCiudad,
   } = useSeleccionarCiudad();
 
-  const {
+  // Watch form values for validation
+  const watchedValues = useWatch({
     control,
-    formState: { errors, isValid },
-    handleSubmit,
-  } = useForm<Partial<Conductor>>({
-    mode: 'onChange',
-    defaultValues: {
-      correo: data.correo || '',
-      telefono: data.telefono || '',
-      celular: data.celular || '',
-      direccion: data.direccion || '',
-      barrio: data.barrio || '',
-      ciudad: data.ciudad || undefined,
-      ciudad__estado__nombre: data.ciudad__estado__nombre || '',
-    },
+    name: ['correo', 'direccion', 'ciudad'],
   });
 
-  // Memoize the submit handler to prevent it from changing on each render
-  const onSubmit = useCallback(
-    (formData: Partial<Conductor>) => {
-      onDataChange(formData);
-    },
-    [onDataChange],
-  );
-
-  // Only update parent when form values actually change, not on every render
+  // Notify parent of validation changes based on form errors and required values
   useEffect(() => {
-    // Skip the initial render to prevent update loops
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
-    }
+    const contactInfoFields = ['correo', 'direccion', 'ciudad'];
 
-    // Use handleSubmit to properly process the form data
-    const timeoutId = setTimeout(() => {
-      handleSubmit(onSubmit)();
-    }, 100); // Small delay to prevent rapid updates
+    // Check for errors
+    const hasErrors = contactInfoFields.some(field => errors[field as keyof Partial<Conductor>]);
 
-    return () => clearTimeout(timeoutId);
-  }, [handleSubmit, onSubmit, isValid]); // Only run when validation changes
+    // Check if required fields have values
+    const hasRequiredValues = contactInfoFields.every((field, index) => {
+      const value = watchedValues[index];
+      return value && value.toString().trim() !== '';
+    });
 
-  // Update validation status
-  useEffect(() => {
+    const isValid = !hasErrors && hasRequiredValues;
     onValidationChange(isValid);
-  }, [isValid, onValidationChange]);
+  }, [errors, errors.ciudad, errors.correo, errors.direccion, watchedValues, onValidationChange]);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -104,16 +78,6 @@ export const ContactInfoStep: React.FC<ContactInfoStepProps> = ({
         label="Teléfono"
         error={errors.telefono}
         placeholder="Ej: 604 123 4567"
-        keyboardType="phone-pad"
-      />
-
-      {/* Celular */}
-      <FormInputController
-        control={control}
-        name="celular"
-        label="Celular"
-        error={errors.celular}
-        placeholder="Ej: 300 123 4567"
         keyboardType="phone-pad"
       />
 

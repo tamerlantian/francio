@@ -3,24 +3,22 @@ import { FormInputController } from '@/src/shared/components/ui/form/FormInputCo
 import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
 import { FormDatePickerController } from '@/src/shared/components/ui/form/FormDatePickerController';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useCallback, useEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { Control, FieldErrors, useWatch } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Conductor } from '../../interfaces/conductor.interface';
 
 interface LicenseInfoStepProps {
-  data: Partial<Conductor>;
-  onDataChange: (_data: Partial<Conductor>) => void;
+  control: Control<Partial<Conductor>>;
+  errors: FieldErrors<Partial<Conductor>>;
   onValidationChange: (_isValid: boolean) => void;
 }
 
 export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
-  data,
-  onDataChange,
+  control,
+  errors,
   onValidationChange,
 }) => {
-  const isInitialRender = useRef(true);
-
   const {
     categoriaLicenciaOptions,
     isLoading: isLoadingCategoriaLicencia,
@@ -45,42 +43,35 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
     }
   };
 
-  const {
+  // Watch form values for validation
+  const watchedValues = useWatch({
     control,
-    formState: { errors, isValid },
-    handleSubmit,
-  } = useForm<Partial<Conductor>>({
-    mode: 'onChange',
-    defaultValues: {
-      numero_licencia: data.numero_licencia || '',
-      categoria_licencia: data.categoria_licencia || undefined,
-      fecha_vence_licencia: data.fecha_vence_licencia || '',
-    },
+    name: ['numero_licencia', 'categoria_licencia', 'fecha_vence_licencia'],
   });
 
-  const onSubmit = useCallback(
-    (formData: Partial<Conductor>) => {
-      onDataChange(formData);
-    },
-    [onDataChange],
-  );
-
+  // Notify parent of validation changes based on form errors and required values
   useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
-    }
+    const licenseInfoFields = ['numero_licencia', 'categoria_licencia', 'fecha_vence_licencia'];
 
-    const timeoutId = setTimeout(() => {
-      handleSubmit(onSubmit)();
-    }, 100);
+    // Check for errors
+    const hasErrors = licenseInfoFields.some(field => errors[field as keyof Partial<Conductor>]);
 
-    return () => clearTimeout(timeoutId);
-  }, [handleSubmit, onSubmit, isValid]);
+    // Check if required fields have values
+    const hasRequiredValues = licenseInfoFields.every((field, index) => {
+      const value = watchedValues[index];
+      return value && value.toString().trim() !== '';
+    });
 
-  useEffect(() => {
+    const isValid = !hasErrors && hasRequiredValues;
     onValidationChange(isValid);
-  }, [isValid, onValidationChange]);
+  }, [
+    errors,
+    errors.numero_licencia,
+    errors.categoria_licencia,
+    errors.fecha_vence_licencia,
+    watchedValues,
+    onValidationChange,
+  ]);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -136,7 +127,8 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
         <View style={styles.infoContent}>
           <Text style={styles.infoTitle}>Información importante</Text>
           <Text style={styles.infoText}>
-            • Verifica que la licencia esté vigente{'\n'}• La categoría debe corresponder al tipo de vehículo{'\n'}• Mantén una copia física disponible
+            • Verifica que la licencia esté vigente{'\n'}• La categoría debe corresponder al tipo de
+            vehículo{'\n'}• Mantén una copia física disponible
           </Text>
         </View>
       </View>

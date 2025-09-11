@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useForm } from 'react-hook-form';
 import { PersonalInfoStep } from './wizard-steps/personal-info-step';
 import { Conductor } from '../interfaces/conductor.interface';
 import { ContactInfoStep } from './wizard-steps/contact-info-step';
@@ -30,21 +31,29 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
   mode,
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState<Partial<Conductor>>({});
   const [stepValidation, setStepValidation] = useState<Record<number, boolean>>({});
+
+  // Centralized form management
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    watch,
+    reset,
+  } = useForm<Partial<Conductor>>({
+    mode: 'onChange',
+    defaultValues: initialData,
+  });
+
+  // Watch form values for real-time updates
+  const formData = watch();
 
   // Initialize form data only once
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
+    if (initialData && Object.keys(initialData).length > 0) {
+      reset(initialData);
     }
-  }, []);
-
-  // Función para actualizar los datos del formulario
-  const updateFormData = useCallback((stepData: Partial<Conductor>) => {
-    console.log('stepData', stepData);
-    setFormData(prev => ({ ...prev, ...stepData }));
-  }, []);
+  }, [initialData, reset]);
 
   // Función para validar un paso
   const validateStep = useCallback((step: number, isValid: boolean) => {
@@ -73,8 +82,10 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
 
   // Función para finalizar el wizard
   const handleFinish = () => {
-    console.log(formData);
-    // onSubmit(formData);
+    handleSubmit(data => {
+      console.log('Final form data:', data);
+      // onSubmit(data);
+    })();
   };
 
   // Renderizar el indicador de progreso
@@ -130,33 +141,21 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
     switch (currentStep) {
       case 1:
         return (
-          <PersonalInfoStep
-            data={formData}
-            onDataChange={updateFormData}
-            onValidationChange={validateStep1}
-          />
+          <PersonalInfoStep control={control} errors={errors} onValidationChange={validateStep1} />
         );
       case 2:
         return (
-          <ContactInfoStep
-            data={formData}
-            onDataChange={updateFormData}
-            onValidationChange={validateStep2}
-          />
+          <ContactInfoStep control={control} errors={errors} onValidationChange={validateStep2} />
         );
       case 3:
         return (
-          <LicenseInfoStep
-            data={formData}
-            onDataChange={updateFormData}
-            onValidationChange={validateStep3}
-          />
+          <LicenseInfoStep control={control} errors={errors} onValidationChange={validateStep3} />
         );
       case 4:
         return (
           <ConfigurationStep
             data={formData}
-            onDataChange={updateFormData}
+            onDataChange={() => {}}
             onValidationChange={validateStep4}
           />
         );
