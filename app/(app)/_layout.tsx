@@ -8,10 +8,10 @@ import { Ionicons } from '@expo/vector-icons';
 
 // Componente personalizado para el contenido del drawer
 function CustomDrawerContent(props: any) {
-  const { logout } = useAuth();
+  // const { logout } = useAuth();
 
   const handleLogout = () => {
-    logout();
+    // logout();
   };
 
   return (
@@ -38,21 +38,21 @@ function CustomDrawerContent(props: any) {
 }
 
 export default function AppLayout() {
-  const { isAuthenticated, loading } = useAuth();
+  // const { isAuthenticated, loading } = useAuth();
 
-  // Show loading indicator while checking authentication
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
+  // // Show loading indicator while checking authentication
+  // if (loading) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+  //       <ActivityIndicator size="large" color="#0000ff" />
+  //     </View>
+  //   );
+  // }
 
-  // Don't render anything if not authenticated - let index.tsx handle navigation
-  if (!isAuthenticated) {
-    return null;
-  }
+  // // Don't render anything if not authenticated - let index.tsx handle navigation
+  // if (!isAuthenticated) {
+  //   return null;
+  // }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
