@@ -4,6 +4,7 @@ import { Drawer } from 'expo-router/drawer';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { Redirect, Stack } from 'expo-router';
 
 // Componente personalizado para el contenido del drawer
 function CustomDrawerContent(props: any) {
@@ -54,37 +55,41 @@ export default function AppLayout() {
   // }
 
   return (
-    <Drawer
-      screenOptions={{
-        headerShown: true,
-        drawerType: 'front',
-        drawerStyle: {
-          width: '70%',
-        },
-        drawerItemStyle: {
-          borderRadius: 12, // Bordes redondeados
-          marginVertical: 5, // Separación entre items
-        },
-      }}
-      drawerContent={props => <CustomDrawerContent {...props} />}
-    >
-      <Drawer.Screen
-        name="(tabs)"
-        options={{
-          drawerLabel: 'Dashboard',
-          headerShown: true,
-          headerTitle: '',
-        }}
-      />
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="(conductor)" options={{ headerShown: false }} />
+    </Stack>
+    // <Drawer
+    //   screenOptions={{
+    //     headerShown: true,
+    //     drawerType: 'front',
+    //     drawerStyle: {
+    //       width: '70%',
+    //     },
+    //     drawerItemStyle: {
+    //       borderRadius: 12, // Bordes redondeados
+    //       marginVertical: 5, // Separación entre items
+    //     },
+    //   }}
+    //   drawerContent={props => <CustomDrawerContent {...props} />}
+    // >
+    //   <Drawer.Screen
+    //     name="(tabs)"
+    //     options={{
+    //       drawerLabel: 'Dashboard',
+    //       headerShown: true,
+    //       headerTitle: '',
+    //     }}
+    //   />
 
-      <Drawer.Screen
-        name="(conductor)"
-        options={{
-          drawerLabel: 'Conductores',
-          headerShown: true,
-          headerTitle: '',
-        }}
-      />
-    </Drawer>
+    //   <Drawer.Screen
+    //     name="(conductor)"
+    //     options={{
+    //       drawerLabel: 'Conductores',
+    //       headerShown: true,
+    //       headerTitle: '',
+    //     }}
+    //   />
+    // </Drawer>
   );
 }
