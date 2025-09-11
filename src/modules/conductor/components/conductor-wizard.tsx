@@ -83,7 +83,14 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
   // Función para finalizar el wizard
   const handleFinish = () => {
     handleSubmit(data => {
-      onSubmit(data);
+      // Generar automáticamente el nombre_corto a partir de nombre1 y apellido1
+      const nombre1 = data.nombre1 || '';
+      const apellido1 = data.apellido1 || '';
+      const dataWithShortName = {
+        ...data,
+        nombre_corto: `${nombre1} ${apellido1}`.trim(),
+      };
+      onSubmit(dataWithShortName);
     })();
   };
 
