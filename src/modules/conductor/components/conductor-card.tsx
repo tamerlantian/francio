@@ -19,7 +19,7 @@ const formatExpirationDate = (dateString: string | null | undefined) => {
 
 interface ConductorCardProps {
   conductor: ConductorResponse;
-  onPress?: (_conductor: ConductorResponse) => void;
+  onPress?: (conductor: ConductorResponse) => void;
 }
 
 export const ConductorCard = ({ conductor, onPress }: ConductorCardProps) => {
