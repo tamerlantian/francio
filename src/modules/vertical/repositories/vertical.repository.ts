@@ -34,7 +34,6 @@ class VerticalRepository extends HttpBaseRepository {
   async getSeleccionarIdentificacion(): Promise<Seleccionar[]> {
     try {
       const response = await this.get<Seleccionar[]>('vertical/identificacion/seleccionar/');
-      console.log(JSON.stringify(response));
       return response;
     } catch (error) {
       console.log('error', error);
@@ -49,7 +48,6 @@ class VerticalRepository extends HttpBaseRepository {
   async getSeleccionarCategoriaLicencia(): Promise<Seleccionar[]> {
     try {
       const response = await this.get<Seleccionar[]>('vertical/categoria_licencia/seleccionar/');
-      console.log(JSON.stringify(response));
       return response;
     } catch (error) {
       console.log('error', error);
@@ -64,7 +62,6 @@ class VerticalRepository extends HttpBaseRepository {
   async getSeleccionarCiudad(): Promise<SeleccionarCiudad[]> {
     try {
       const response = await this.get<SeleccionarCiudad[]>('vertical/ciudad/seleccionar/');
-      console.log(JSON.stringify(response));
       return response;
     } catch (error) {
       console.log('error', error);

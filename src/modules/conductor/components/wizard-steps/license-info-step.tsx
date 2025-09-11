@@ -1,6 +1,7 @@
 import { useSeleccionarCategoriaLicencia } from '@/src/modules/vertical/hooks/use-vertical.hook';
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
 import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
+import { FormDatePickerController } from '@/src/shared/components/ui/form/FormDatePickerController';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -48,7 +49,6 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
     control,
     formState: { errors, isValid },
     handleSubmit,
-    setValue,
   } = useForm<Partial<Conductor>>({
     mode: 'onChange',
     defaultValues: {
@@ -81,17 +81,6 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
   useEffect(() => {
     onValidationChange(isValid);
   }, [isValid, onValidationChange]);
-
-  const formatearFecha = (texto: string) => {
-    const numeros = texto.replace(/\D/g, '');
-    if (numeros.length >= 8) {
-      const year = numeros.substring(0, 4);
-      const month = numeros.substring(4, 6);
-      const day = numeros.substring(6, 8);
-      return `${year}-${month}-${day}`;
-    }
-    return numeros;
-  };
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -128,39 +117,26 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
         apiError={errorCategoriaLicencia}
       />
 
-      <FormInputController
+      <FormDatePickerController
         control={control}
         name="fecha_vence_licencia"
         label="Fecha de Vencimiento *"
+        placeholder="Seleccionar fecha de vencimiento"
         error={errors.fecha_vence_licencia}
-        placeholder="YYYY-MM-DD (Ej: 2025-12-31)"
-        keyboardType="numeric"
-        maxLength={10}
         rules={{
           required: 'Este campo es obligatorio',
           validate: validateFechaVencimiento,
         }}
-        onChange={e => {
-          const text = e.nativeEvent.text;
-          const fechaFormateada = formatearFecha(text);
-          setValue('fecha_vence_licencia', fechaFormateada);
-        }}
+        minimumDate={new Date()}
+        format="YYYY-MM-DD"
       />
-      <View style={styles.dateHelper}>
-        <Ionicons name="calendar-outline" size={16} color="#666" />
-        <Text style={styles.dateHelperText}>Formato: Año-Mes-Día (YYYY-MM-DD)</Text>
-      </View>
 
       <View style={styles.infoBox}>
         <Ionicons name="information-circle-outline" size={20} color="#0066CC" />
         <View style={styles.infoContent}>
           <Text style={styles.infoTitle}>Información importante</Text>
           <Text style={styles.infoText}>
-            • Verifica que la licencia esté vigente
-            {'\n'}
-            • La categoría debe corresponder al tipo de vehículo
-            {'\n'}
-            • Mantén una copia física disponible
+            • Verifica que la licencia esté vigente{'\n'}• La categoría debe corresponder al tipo de vehículo{'\n'}• Mantén una copia física disponible
           </Text>
         </View>
       </View>

@@ -42,6 +42,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
 
   // Función para actualizar los datos del formulario
   const updateFormData = useCallback((stepData: Partial<Conductor>) => {
+    console.log('stepData', stepData);
     setFormData(prev => ({ ...prev, ...stepData }));
   }, []);
 
@@ -72,7 +73,8 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
 
   // Función para finalizar el wizard
   const handleFinish = () => {
-    onSubmit(formData);
+    console.log(formData);
+    // onSubmit(formData);
   };
 
   // Renderizar el indicador de progreso
