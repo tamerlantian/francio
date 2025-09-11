@@ -9,6 +9,7 @@ import {
   Animated,
   Dimensions,
   Easing,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -24,6 +25,9 @@ interface FormSelectorProps {
   value?: string;
   onValueChange: (_value: string) => void;
   error?: string;
+  isLoading?: boolean;
+  onRetry?: () => void;
+  emptyOptionsMessage?: string;
 }
 
 export const FormSelector = ({
@@ -33,6 +37,9 @@ export const FormSelector = ({
   value,
   onValueChange,
   error,
+  isLoading,
+  onRetry,
+  emptyOptionsMessage,
 }: FormSelectorProps) => {
   // Estado para controlar la visibilidad del modal
   const [modalVisible, setModalVisible] = useState(false);
@@ -138,6 +145,52 @@ export const FormSelector = ({
                 <Ionicons name="close" size={24} color="#333" />
               </TouchableOpacity>
             </View>
+
+            {isLoading && (
+              <View style={styles.loaderContainer}>
+                <ActivityIndicator size="small" color="#0066CC" />
+                <Text style={styles.loaderText}>Cargando opciones...</Text>
+              </View>
+            )}
+
+            {error && !isLoading && (
+              <View style={styles.errorContainer}>
+                <View style={styles.errorContent}>
+                  <Ionicons
+                    name="warning-outline"
+                    size={20}
+                    color="#FF3B30"
+                    style={styles.errorIcon}
+                  />
+                  <Text style={styles.errorMessage}>Error al cargar opciones</Text>
+                </View>
+                {onRetry && (
+                  <TouchableOpacity onPress={onRetry} style={styles.retryButton}>
+                    <Ionicons
+                      name="refresh-outline"
+                      size={16}
+                      color="#FFFFFF"
+                      style={styles.retryIcon}
+                    />
+                    <Text style={styles.retryButtonText}>Reintentar</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )}
+
+            {!isLoading && !error && options.length === 0 && (
+              <View style={styles.emptyContainer}>
+                <Ionicons
+                  name="information-circle-outline"
+                  size={20}
+                  color="#666"
+                  style={styles.emptyIcon}
+                />
+                <Text style={styles.noOptionsText}>
+                  {emptyOptionsMessage || 'No hay opciones disponibles'}
+                </Text>
+              </View>
+            )}
 
             <FlatList
               data={options}
@@ -249,5 +302,75 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: '#eee',
+  },
+  loaderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+  },
+  loaderText: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 8,
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    backgroundColor: '#FFF5F5',
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#FFE5E5',
+  },
+  errorContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  errorIcon: {
+    marginRight: 8,
+  },
+  errorMessage: {
+    fontSize: 14,
+    color: '#FF3B30',
+    flex: 1,
+  },
+  retryButton: {
+    backgroundColor: '#0066CC',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  retryIcon: {
+    marginRight: 4,
+  },
+  retryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  emptyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+  },
+  emptyIcon: {
+    marginRight: 8,
+  },
+  noOptionsText: {
+    fontSize: 14,
+    color: '#666',
+    fontStyle: 'italic',
+    textAlign: 'center',
   },
 });

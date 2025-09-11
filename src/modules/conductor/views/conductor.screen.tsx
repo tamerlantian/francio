@@ -70,20 +70,20 @@ export default function ConductorScreen() {
   }
 
   // Si hay un error, mostramos un mensaje
-  if (isError) {
-    return (
-      <View style={conductorStyles.emptyContainer}>
-        <Ionicons name="alert-circle-outline" size={48} color="#F44336" />
-        <Text style={conductorStyles.emptyText}>Ocurrió un error al cargar los conductores</Text>
-        <TouchableOpacity
-          style={{ marginTop: 16, padding: 10, backgroundColor: '#0066cc', borderRadius: 8 }}
-          onPress={() => refetch()}
-        >
-          <Text style={{ color: 'white' }}>Intentar nuevamente</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+  // if (isError) {
+  //   return (
+  //     <View style={conductorStyles.emptyContainer}>
+  //       <Ionicons name="alert-circle-outline" size={48} color="#F44336" />
+  //       <Text style={conductorStyles.emptyText}>Ocurrió un error al cargar los conductores</Text>
+  //       <TouchableOpacity
+  //         style={{ marginTop: 16, padding: 10, backgroundColor: '#0066cc', borderRadius: 8 }}
+  //         onPress={() => refetch()}
+  //       >
+  //         <Text style={{ color: 'white' }}>Intentar nuevamente</Text>
+  //       </TouchableOpacity>
+  //     </View>
+  //   );
+  // }
 
   return (
     <SafeAreaView

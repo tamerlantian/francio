@@ -10,6 +10,10 @@ interface FormSelectorControllerProps<T extends FieldValues> {
   options: Option[];
   error?: FieldError;
   rules?: Record<string, any>;
+  isLoading?: boolean;
+  onRetry?: () => void;
+  emptyOptionsMessage?: string;
+  apiError?: Error | null;
 }
 
 export const FormSelectorController = <T extends FieldValues>({
@@ -20,6 +24,10 @@ export const FormSelectorController = <T extends FieldValues>({
   options,
   error,
   rules,
+  isLoading,
+  onRetry,
+  emptyOptionsMessage,
+  apiError,
 }: FormSelectorControllerProps<T>) => {
   return (
     <Controller
@@ -33,7 +41,10 @@ export const FormSelectorController = <T extends FieldValues>({
           options={options}
           value={value}
           onValueChange={onChange}
-          error={error?.message}
+          error={error?.message || (apiError ? 'Error al cargar opciones' : undefined)}
+          isLoading={isLoading}
+          onRetry={onRetry}
+          emptyOptionsMessage={emptyOptionsMessage}
         />
       )}
     />

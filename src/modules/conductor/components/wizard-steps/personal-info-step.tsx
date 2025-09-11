@@ -1,8 +1,4 @@
-import {
-  useSeleccionarCategoriaLicencia,
-  useSeleccionarCiudad,
-  useSeleccionarIdentificacion,
-} from '@/src/modules/vertical/hooks/use-vertical.hook';
+import { useSeleccionarIdentificacion } from '@/src/modules/vertical/hooks/use-vertical.hook';
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
 import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
 import React, { useCallback, useEffect, useRef } from 'react';
@@ -23,9 +19,14 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
 }) => {
   // Use a ref to prevent initial render updates
   const isInitialRender = useRef(true);
-  const { identificacionOptions } = useSeleccionarIdentificacion();
-  const { categoriaLicenciaOptions } = useSeleccionarCategoriaLicencia();
-  const { ciudadOptions } = useSeleccionarCiudad();
+
+  // Identification selector data
+  const {
+    identificacionOptions,
+    isLoading: isLoadingIdentificacion,
+    error: errorIdentificacion,
+    refetch: refetchIdentificacion,
+  } = useSeleccionarIdentificacion();
   const {
     control,
     formState: { errors, isValid },
@@ -85,6 +86,10 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
         options={identificacionOptions}
         error={errors.identificacion}
         rules={{ required: 'Este campo es obligatorio' }}
+        isLoading={isLoadingIdentificacion}
+        onRetry={refetchIdentificacion}
+        emptyOptionsMessage="No hay tipos de identificación disponibles"
+        apiError={errorIdentificacion}
       />
 
       {/* Número de Identificación */}
@@ -154,44 +159,5 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     textAlign: 'center',
     lineHeight: 20,
-  },
-  fieldContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#E5E5E5',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#FFFFFF',
-    color: '#333',
-  },
-  inputError: {
-    borderColor: '#FF3B30',
-    backgroundColor: '#FFF5F5',
-  },
-  inputReadonly: {
-    backgroundColor: '#F8F9FA',
-    color: '#666',
-  },
-  errorText: {
-    color: '#FF3B30',
-    fontSize: 12,
-    marginTop: 4,
-    marginLeft: 4,
-  },
-  helpText: {
-    color: '#999',
-    fontSize: 12,
-    marginTop: 4,
-    marginLeft: 4,
-    fontStyle: 'italic',
   },
 });

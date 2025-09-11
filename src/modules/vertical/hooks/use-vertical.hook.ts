@@ -9,7 +9,7 @@ const verticalKeys = {
 };
 
 export const useSeleccionarIdentificacion = () => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: verticalKeys.identificacion(),
     queryFn: () => generalRepository.getSeleccionarIdentificacion(),
   });
@@ -20,11 +20,11 @@ export const useSeleccionarIdentificacion = () => {
       value: identificacion.id.toString(),
     })) || [];
 
-  return { identificacionOptions, isLoading, error };
+  return { identificacionOptions, isLoading, error, refetch };
 };
 
 export const useSeleccionarCategoriaLicencia = () => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: verticalKeys.categoriaLicencia(),
     queryFn: () => generalRepository.getSeleccionarCategoriaLicencia(),
   });
@@ -35,11 +35,11 @@ export const useSeleccionarCategoriaLicencia = () => {
       value: categoriaLicencia.id.toString(),
     })) || [];
 
-  return { categoriaLicenciaOptions, isLoading, error };
+  return { categoriaLicenciaOptions, isLoading, error, refetch };
 };
 
 export const useSeleccionarCiudad = () => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: verticalKeys.ciudad(),
     queryFn: () => generalRepository.getSeleccionarCiudad(),
   });
@@ -50,5 +50,5 @@ export const useSeleccionarCiudad = () => {
       value: ciudad.id.toString(),
     })) || [];
 
-  return { ciudadOptions, isLoading, error };
+  return { ciudadOptions, isLoading, error, refetch };
 };
