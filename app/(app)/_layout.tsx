@@ -1,7 +1,6 @@
 import { useAuth } from '@/src/modules/auth/views/AuthProvider';
 import { View, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
 import { Drawer } from 'expo-router/drawer';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
@@ -55,39 +54,37 @@ export default function AppLayout() {
   // }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Drawer
-        screenOptions={{
+    <Drawer
+      screenOptions={{
+        headerShown: true,
+        drawerType: 'front',
+        drawerStyle: {
+          width: '70%',
+        },
+        drawerItemStyle: {
+          borderRadius: 12, // Bordes redondeados
+          marginVertical: 5, // Separación entre items
+        },
+      }}
+      drawerContent={props => <CustomDrawerContent {...props} />}
+    >
+      <Drawer.Screen
+        name="(tabs)"
+        options={{
+          drawerLabel: 'Dashboard',
           headerShown: true,
-          drawerType: 'front',
-          drawerStyle: {
-            width: '70%',
-          },
-          drawerItemStyle: {
-            borderRadius: 12, // Bordes redondeados
-            marginVertical: 5, // Separación entre items
-          },
+          headerTitle: '',
         }}
-        drawerContent={props => <CustomDrawerContent {...props} />}
-      >
-        <Drawer.Screen
-          name="(tabs)"
-          options={{
-            drawerLabel: 'Dashboard',
-            headerShown: true,
-            headerTitle: '',
-          }}
-        />
+      />
 
-        <Drawer.Screen
-          name="(conductor)"
-          options={{
-            drawerLabel: 'Conductores',
-            headerShown: true,
-            headerTitle: '',
-          }}
-        />
-      </Drawer>
-    </GestureHandlerRootView>
+      <Drawer.Screen
+        name="(conductor)"
+        options={{
+          drawerLabel: 'Conductores',
+          headerShown: true,
+          headerTitle: '',
+        }}
+      />
+    </Drawer>
   );
 }
