@@ -46,7 +46,7 @@ export const useSeleccionarCiudad = () => {
 
   const ciudadOptions =
     data?.map(ciudad => ({
-      label: ciudad.nombre,
+      label: `${ciudad.nombre} - ${ciudad.estado__nombre}`,
       value: ciudad.id.toString(),
     })) || [];
 

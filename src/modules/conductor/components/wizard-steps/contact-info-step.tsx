@@ -1,5 +1,9 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
+import { useSeleccionarCiudad } from '@/src/modules/vertical/hooks/use-vertical.hook';
+import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
+import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import { Conductor } from '../../interfaces/conductor.interface';
 
 interface ContactInfoStepProps {
@@ -13,121 +17,156 @@ export const ContactInfoStep: React.FC<ContactInfoStepProps> = ({
   onDataChange,
   onValidationChange,
 }) => {
-  // Simple validation function
-  const validateForm = (formData: Partial<Conductor>) => {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    const isEmailValid = formData.correo && emailRegex.test(formData.correo);
-    const isAddressValid = formData.direccion && formData.direccion.length >= 10;
-    const isValid = !!(isEmailValid && isAddressValid);
-    onValidationChange(isValid);
-    return isValid;
-  };
+  // Use a ref to prevent initial render updates
+  const isInitialRender = useRef(true);
 
-  // Handle field changes
-  const handleFieldChange = (fieldName: string, value: string) => {
-    const updatedData = { ...data, [fieldName]: value };
-    onDataChange(updatedData);
-    validateForm(updatedData);
-  };
+  // Ciudad selector data
+  const {
+    ciudadOptions,
+    isLoading: isLoadingCiudad,
+    error: errorCiudad,
+    refetch: refetchCiudad,
+  } = useSeleccionarCiudad();
+
+  const {
+    control,
+    formState: { errors, isValid },
+    handleSubmit,
+  } = useForm<Partial<Conductor>>({
+    mode: 'onChange',
+    defaultValues: {
+      correo: data.correo || '',
+      telefono: data.telefono || '',
+      celular: data.celular || '',
+      direccion: data.direccion || '',
+      barrio: data.barrio || '',
+      ciudad: data.ciudad || undefined,
+      ciudad__estado__nombre: data.ciudad__estado__nombre || '',
+    },
+  });
+
+  // Memoize the submit handler to prevent it from changing on each render
+  const onSubmit = useCallback(
+    (formData: Partial<Conductor>) => {
+      onDataChange(formData);
+    },
+    [onDataChange],
+  );
+
+  // Only update parent when form values actually change, not on every render
+  useEffect(() => {
+    // Skip the initial render to prevent update loops
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+
+    // Use handleSubmit to properly process the form data
+    const timeoutId = setTimeout(() => {
+      handleSubmit(onSubmit)();
+    }, 100); // Small delay to prevent rapid updates
+
+    return () => clearTimeout(timeoutId);
+  }, [handleSubmit, onSubmit, isValid]); // Only run when validation changes
+
+  // Update validation status
+  useEffect(() => {
+    onValidationChange(isValid);
+  }, [isValid, onValidationChange]);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <Text style={styles.description}>Información de contacto y ubicación del conductor</Text>
 
       {/* Correo Electrónico */}
-      <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Correo Electrónico *</Text>
-        <TextInput
-          style={styles.input}
-          value={data.correo || ''}
-          onChangeText={value => handleFieldChange('correo', value)}
-          placeholder="ejemplo@correo.com"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoComplete="email"
-        />
-      </View>
+      <FormInputController
+        control={control}
+        name="correo"
+        label="Correo Electrónico *"
+        error={errors.correo}
+        placeholder="ejemplo@correo.com"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoComplete="email"
+        rules={{
+          required: 'Este campo es obligatorio',
+          pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: 'Correo electrónico inválido',
+          },
+        }}
+      />
 
       {/* Teléfono */}
-      <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Teléfono</Text>
-        <TextInput
-          style={styles.input}
-          value={data.telefono || ''}
-          onChangeText={value => handleFieldChange('telefono', value)}
-          placeholder="Ej: 604 123 4567"
-          keyboardType="phone-pad"
-        />
-      </View>
+      <FormInputController
+        control={control}
+        name="telefono"
+        label="Teléfono"
+        error={errors.telefono}
+        placeholder="Ej: 604 123 4567"
+        keyboardType="phone-pad"
+      />
 
       {/* Celular */}
-      <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Celular</Text>
-        <TextInput
-          style={styles.input}
-          value={data.celular || ''}
-          onChangeText={value => handleFieldChange('celular', value)}
-          placeholder="Ej: 300 123 4567"
-          keyboardType="phone-pad"
-        />
-      </View>
+      <FormInputController
+        control={control}
+        name="celular"
+        label="Celular"
+        error={errors.celular}
+        placeholder="Ej: 300 123 4567"
+        keyboardType="phone-pad"
+      />
 
       {/* Dirección */}
-      <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Dirección *</Text>
-        <TextInput
-          style={styles.input}
-          value={data.direccion || ''}
-          onChangeText={value => handleFieldChange('direccion', value)}
-          placeholder="Ej: Calle 123 # 45-67"
-          multiline
-          numberOfLines={2}
-          textAlignVertical="top"
-        />
-      </View>
+      <FormInputController
+        control={control}
+        name="direccion"
+        label="Dirección *"
+        error={errors.direccion}
+        placeholder="Ej: Calle 123 # 45-67"
+        multiline
+        numberOfLines={2}
+        textAlignVertical="top"
+        rules={{
+          required: 'Este campo es obligatorio',
+          minLength: {
+            value: 10,
+            message: 'La dirección debe tener al menos 10 caracteres',
+          },
+        }}
+      />
 
       {/* Barrio */}
-      <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Barrio</Text>
-        <TextInput
-          style={styles.input}
-          value={data.barrio || ''}
-          onChangeText={value => handleFieldChange('barrio', value)}
-          placeholder="Ej: El Poblado"
-          autoCapitalize="words"
-        />
-      </View>
+      <FormInputController
+        control={control}
+        name="barrio"
+        label="Barrio"
+        error={errors.barrio}
+        placeholder="Ej: El Poblado"
+        autoCapitalize="words"
+      />
 
       {/* Ciudad */}
-      <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Ciudad</Text>
-        <TextInput
-          style={styles.input}
-          value={data.ciudad__nombre || ''}
-          onChangeText={value => handleFieldChange('ciudad__nombre', value)}
-          placeholder="Ej: Medellín"
-          autoCapitalize="words"
-        />
-      </View>
+      <FormSelectorController
+        control={control}
+        name="ciudad"
+        label="Ciudad *"
+        placeholder="Selecciona la ciudad"
+        options={ciudadOptions}
+        error={errors.ciudad}
+        rules={{ required: 'Este campo es obligatorio' }}
+        isLoading={isLoadingCiudad}
+        onRetry={refetchCiudad}
+        emptyOptionsMessage="No hay ciudades disponibles"
+        apiError={errorCiudad}
+      />
 
-      {/* Departamento */}
-      <View style={styles.fieldContainer}>
-        <Text style={styles.label}>Departamento</Text>
-        <TextInput
-          style={styles.input}
-          value={data.ciudad__estado__nombre || ''}
-          onChangeText={value => handleFieldChange('ciudad__estado__nombre', value)}
-          placeholder="Ej: Antioquia"
-          autoCapitalize="words"
-        />
-      </View>
-
-      <View style={styles.infoBox}>
+      {/* <View style={styles.infoBox}>
         <Text style={styles.infoText}>
           💡 Asegúrate de que la información de contacto esté actualizada para poder comunicarse con
           el conductor cuando sea necesario.
         </Text>
-      </View>
+      </View> */}
     </ScrollView>
   );
 };
@@ -142,34 +181,6 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     textAlign: 'center',
     lineHeight: 20,
-  },
-  fieldContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#E5E5E5',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: '#FFFFFF',
-    color: '#333',
-  },
-  inputError: {
-    borderColor: '#FF3B30',
-    backgroundColor: '#FFF5F5',
-  },
-  errorText: {
-    color: '#FF3B30',
-    fontSize: 12,
-    marginTop: 4,
-    marginLeft: 4,
   },
   infoBox: {
     backgroundColor: '#F0F8FF',
