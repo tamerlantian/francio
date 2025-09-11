@@ -16,8 +16,6 @@ export const useConductor = () => {
     queryFn: () => conductorController.getConductores(),
   });
 
-  console.log(JSON.stringify(data));
-
   return {
     conductores: data?.results || [],
     total: data?.total || 0,

@@ -1,9 +1,13 @@
+import {
+  useSeleccionarCategoriaLicencia,
+  useSeleccionarCiudad,
+  useSeleccionarIdentificacion,
+} from '@/src/modules/vertical/hooks/use-vertical.hook';
+import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
+import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text } from 'react-native';
-import { FormInputController } from '../../../../shared/components/ui/form/FormInputController';
-import { FormSelectorController } from '../../../../shared/components/ui/form/FormSelectorController';
-import { Option } from '../../../../shared/components/ui/form/FormSelector';
 import { Conductor } from '../../interfaces/conductor.interface';
 
 interface PersonalInfoStepProps {
@@ -12,16 +16,6 @@ interface PersonalInfoStepProps {
   onValidationChange: (_isValid: boolean) => void;
 }
 
-// Opciones de tipo de identificación
-const tipoIdentificacionOptions: Option[] = [
-  { label: 'Cédula de Ciudadanía', value: '1' },
-  { label: 'Cédula de Extranjería', value: '2' },
-  { label: 'Pasaporte', value: '3' },
-  { label: 'Tarjeta de Identidad', value: '4' },
-  { label: 'Registro Civil', value: '5' },
-  { label: 'NIT', value: '6' },
-];
-
 export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
   data,
   onDataChange,
@@ -29,7 +23,9 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
 }) => {
   // Use a ref to prevent initial render updates
   const isInitialRender = useRef(true);
-
+  const { identificacionOptions } = useSeleccionarIdentificacion();
+  const { categoriaLicenciaOptions } = useSeleccionarCategoriaLicencia();
+  const { ciudadOptions } = useSeleccionarCiudad();
   const {
     control,
     formState: { errors, isValid },
@@ -86,7 +82,7 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
         name="identificacion"
         label="Tipo de Identificación *"
         placeholder="Selecciona el tipo de identificación"
-        options={tipoIdentificacionOptions}
+        options={identificacionOptions}
         error={errors.identificacion}
         rules={{ required: 'Este campo es obligatorio' }}
       />
