@@ -10,11 +10,12 @@ import { ConductorCard } from '../components/conductor-card';
 import ConductorFormulario from '../components/conductor-formulario';
 import { Conductor } from '../interfaces/conductor.interface';
 import { conductorStyles } from '../styles/conductor.style';
-import { useConductor } from '../view-models/conductor.view-model';
+import { useConductor, useCreateConductor } from '../view-models/conductor.view-model';
 // Componente principal de la pantalla de conductores
 export default function ConductorScreen() {
   // Utilizamos el ViewModel para obtener los datos
   const { conductores, isLoading, isError, refetch } = useConductor();
+  const { mutateAsync: createConductor } = useCreateConductor();
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   // Estado para manejar el modo del formulario y el conductor seleccionado
@@ -43,17 +44,15 @@ export default function ConductorScreen() {
   };
 
   // Función para manejar el envío del formulario
-  const handleFormSubmit = async (_data: any) => {
+  const handleFormSubmit = async (data: Conductor) => {
     setIsFormLoading(true);
     try {
-      // TODO: Implementar la lógica de guardado/actualización
-
-      // Simular una operación async
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Cerrar el modal y refrescar los datos
+      if (formMode === 'create') {
+        await createConductor(data);
+      } else {
+        // await updateConductor(data);
+      }
       handleCloseModal();
-      refetch();
     } catch (error) {
       console.error('Error al guardar conductor:', error);
     } finally {

@@ -1,6 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { conductorController } from '../controllers/conductor.controller';
 import { Conductor } from '../interfaces/conductor.interface';
+import { useToast } from '@/src/shared/hooks/use-toast.hook';
+import { ApiErrorResponse } from '@/src/core/interfaces/api.interface';
 
 export const conductorKeys = {
   all: ['conductores'] as const,
@@ -40,6 +42,31 @@ export const useConductorById = (id: string) => {
   return {
     conductor: data as Conductor | null,
     isLoading,
+    isError,
+    error,
+  };
+};
+
+/**
+ * Crea un nuevo conductor
+ */
+export const useCreateConductor = () => {
+  const queryClient = useQueryClient();
+  const toast = useToast();
+  const { mutateAsync, isError, error } = useMutation({
+    mutationFn: (data: Conductor) => conductorController.createConductor(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: conductorKeys.list() });
+      toast.success('Conductor creado exitosamente');
+    },
+    onError: (error: unknown) => {
+      const errorParsed = error as ApiErrorResponse;
+      toast.error(errorParsed?.mensaje || 'Error al crear el conductor');
+    },
+  });
+
+  return {
+    mutateAsync,
     isError,
     error,
   };

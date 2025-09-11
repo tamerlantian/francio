@@ -83,8 +83,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
   // Función para finalizar el wizard
   const handleFinish = () => {
     handleSubmit(data => {
-      console.log('Final form data:', data);
-      // onSubmit(data);
+      onSubmit(data);
     })();
   };
 

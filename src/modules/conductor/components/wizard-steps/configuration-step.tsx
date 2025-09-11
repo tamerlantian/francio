@@ -1,36 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Switch } from 'react-native';
+import { Control, FieldErrors } from 'react-hook-form';
 import { Conductor } from '../../interfaces/conductor.interface';
 
 interface ConfigurationStepProps {
-  data: Partial<Conductor>;
-  onDataChange: (data: Partial<Conductor>) => void;
-  onValidationChange: (isValid: boolean) => void;
+  control: Control<Partial<Conductor>>;
+  errors: FieldErrors<Partial<Conductor>>;
+  onValidationChange: (_isValid: boolean) => void;
 }
 
-export const ConfigurationStep: React.FC<ConfigurationStepProps> = ({
-  data,
-  onDataChange,
-  onValidationChange,
-}) => {
-  // Handle switch changes
-  const handleSwitchChange = (fieldName: string, value: boolean) => {
-    const updatedData = { ...data, [fieldName]: value };
-    onDataChange(updatedData);
-    // This step is always valid since these are optional configurations
-    onValidationChange(true);
-  };
+export const ConfigurationStep: React.FC<ConfigurationStepProps> = ({ onValidationChange }) => {
+  // Estado local para los switches ya que no son parte de la interfaz Conductor
+  const [isActive, setIsActive] = useState(true);
+  const [isInactive, setIsInactive] = useState(false);
 
-  // Set initial validation state
-  React.useEffect(() => {
+  // Este paso siempre es válido ya que son configuraciones opcionales
+  useEffect(() => {
     onValidationChange(true);
   }, [onValidationChange]);
 
+  // Manejadores para los switches
+  const handleActiveChange = (value: boolean) => {
+    setIsActive(value);
+  };
+
+  const handleInactiveChange = (value: boolean) => {
+    setIsInactive(value);
+  };
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <Text style={styles.description}>
-        Configura el estado del conductor en el sistema
-      </Text>
+      <Text style={styles.description}>Configura el estado del conductor en el sistema</Text>
 
       {/* Estado del conductor */}
       <View style={styles.sectionContainer}>
@@ -48,10 +48,10 @@ export const ConfigurationStep: React.FC<ConfigurationStepProps> = ({
             </Text>
           </View>
           <Switch
-            value={data.conductor !== undefined ? data.conductor : true}
-            onValueChange={(value) => handleSwitchChange('conductor', value)}
+            value={isActive}
+            onValueChange={handleActiveChange}
             trackColor={{ false: '#E5E7EB', true: '#10B981' }}
-            thumbColor={data.conductor !== undefined ? (data.conductor ? '#FFFFFF' : '#9CA3AF') : '#FFFFFF'}
+            thumbColor={isActive ? '#FFFFFF' : '#9CA3AF'}
             ios_backgroundColor="#E5E7EB"
           />
         </View>
@@ -65,10 +65,10 @@ export const ConfigurationStep: React.FC<ConfigurationStepProps> = ({
             </Text>
           </View>
           <Switch
-            value={data.estado_inactivo || false}
-            onValueChange={(value) => handleSwitchChange('estado_inactivo', value)}
+            value={isInactive}
+            onValueChange={handleInactiveChange}
             trackColor={{ false: '#E5E7EB', true: '#EF4444' }}
-            thumbColor={data.estado_inactivo ? '#FFFFFF' : '#9CA3AF'}
+            thumbColor={isInactive ? '#FFFFFF' : '#9CA3AF'}
             ios_backgroundColor="#E5E7EB"
           />
         </View>
@@ -78,19 +78,17 @@ export const ConfigurationStep: React.FC<ConfigurationStepProps> = ({
       <View style={styles.summaryContainer}>
         <Text style={styles.summaryTitle}>Resumen de Configuración</Text>
         <View style={styles.summaryContent}>
-          <Text style={styles.summaryItem}>
-            Conductor: {(data.conductor !== undefined ? data.conductor : true) ? '✓ Activo' : '✗ Inactivo'}
-          </Text>
-          <Text style={[styles.summaryItem, data.estado_inactivo && styles.inactiveText]}>
-            Estado: {data.estado_inactivo ? 'Inactivo' : 'Activo'}
+          <Text style={styles.summaryItem}>Conductor: {isActive ? '✓ Activo' : '✗ Inactivo'}</Text>
+          <Text style={[styles.summaryItem, isInactive && styles.inactiveText]}>
+            Estado: {isInactive ? 'Inactivo' : 'Activo'}
           </Text>
         </View>
 
         <View style={styles.noteContainer}>
           <Text style={styles.noteTitle}>Nota:</Text>
           <Text style={styles.noteText}>
-            • El rol de conductor es requerido para operar vehículos{'\n'}
-            • Los cambios se aplicarán al guardar el formulario
+            • El rol de conductor es requerido para operar vehículos{'\n'}• Los cambios se aplicarán
+            al guardar el formulario
           </Text>
         </View>
       </View>

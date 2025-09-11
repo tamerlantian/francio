@@ -1,6 +1,6 @@
 import { ApiQueryParametros, ApiResponse } from '@/src/core/interfaces/api.interface';
 import { HttpBaseRepository } from '../../../core/repositories/http-base.repository';
-import { ConductorResponse, ConductorSelector } from '../interfaces/conductor.interface';
+import { Conductor, ConductorResponse, ConductorSelector } from '../interfaces/conductor.interface';
 
 /**
  * Repositorio para manejar las operaciones de API relacionadas con conductores
@@ -43,5 +43,14 @@ export class ConductorRepository extends HttpBaseRepository {
    */
   async getConductoresSelector(params: ApiQueryParametros = {}) {
     return this.get<ConductorSelector[]>('vertical/conductor/seleccionar/', params);
+  }
+
+  /**
+   * Crea un nuevo conductor
+   * @param data Datos del conductor a crear
+   * @returns Promise con la respuesta de la creación del conductor
+   */
+  async createConductor(data: Conductor) {
+    return this.post<ApiResponse<ConductorResponse>>('vertical/conductor/', data);
   }
 }
