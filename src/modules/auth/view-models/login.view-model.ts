@@ -17,7 +17,7 @@ export const useLogin = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: authKeys.session() });
       queryClient.invalidateQueries({ queryKey: authKeys.user() });
-      router.replace('/(app)/(conductor)');
+      router.replace('/(app)/(tabs)');
       toast.success('Inicio de sesión exitoso');
     },
     onError: (error: any) => {

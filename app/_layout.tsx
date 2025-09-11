@@ -15,13 +15,13 @@ export default function RootLayout() {
         <ToastProvider>
           <BottomSheetModalProvider>
             <DevModeProvider>
-              {/* <AuthProvider> */}
-              <Stack>
-                <Stack.Screen options={{ headerShown: false }} name="index" />
-                <Stack.Screen options={{ headerShown: false }} name="(app)" />
-                <Stack.Screen options={{ headerShown: false }} name="(auth)" />
-              </Stack>
-              {/* </AuthProvider> */}
+              <AuthProvider>
+                <Stack>
+                  <Stack.Screen options={{ headerShown: false }} name="index" />
+                  <Stack.Screen options={{ headerShown: false }} name="(app)" />
+                  <Stack.Screen options={{ headerShown: false }} name="(auth)" />
+                </Stack>
+              </AuthProvider>
             </DevModeProvider>
           </BottomSheetModalProvider>
         </ToastProvider>

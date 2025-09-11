@@ -4,14 +4,13 @@ import { Drawer } from 'expo-router/drawer';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { Redirect, Stack } from 'expo-router';
 
 // Componente personalizado para el contenido del drawer
 function CustomDrawerContent(props: any) {
-  // const { logout } = useAuth();
+  const { logout } = useAuth();
 
   const handleLogout = () => {
-    // logout();
+    logout();
   };
 
   return (
@@ -38,58 +37,54 @@ function CustomDrawerContent(props: any) {
 }
 
 export default function AppLayout() {
-  // const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
 
-  // // Show loading indicator while checking authentication
-  // if (loading) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-  //       <ActivityIndicator size="large" color="#0000ff" />
-  //     </View>
-  //   );
-  // }
+  // Show loading indicator while checking authentication
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   // // Don't render anything if not authenticated - let index.tsx handle navigation
-  // if (!isAuthenticated) {
-  //   return null;
-  // }
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
-    <Stack>
-      {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="(conductor)" options={{ headerShown: false }} /> */}
-    </Stack>
-    // <Drawer
-    //   screenOptions={{
-    //     headerShown: true,
-    //     drawerType: 'front',
-    //     drawerStyle: {
-    //       width: '70%',
-    //     },
-    //     drawerItemStyle: {
-    //       borderRadius: 12, // Bordes redondeados
-    //       marginVertical: 5, // Separación entre items
-    //     },
-    //   }}
-    //   drawerContent={props => <CustomDrawerContent {...props} />}
-    // >
-    //   <Drawer.Screen
-    //     name="(tabs)"
-    //     options={{
-    //       drawerLabel: 'Dashboard',
-    //       headerShown: true,
-    //       headerTitle: '',
-    //     }}
-    //   />
+    <Drawer
+      screenOptions={{
+        headerShown: true,
+        drawerType: 'front',
+        drawerStyle: {
+          width: '70%',
+        },
+        drawerItemStyle: {
+          borderRadius: 12, // Bordes redondeados
+          marginVertical: 5, // Separación entre items
+        },
+      }}
+      drawerContent={props => <CustomDrawerContent {...props} />}
+    >
+      <Drawer.Screen
+        name="(tabs)"
+        options={{
+          drawerLabel: 'Dashboard',
+          headerShown: true,
+          headerTitle: '',
+        }}
+      />
 
-    //   <Drawer.Screen
-    //     name="(conductor)"
-    //     options={{
-    //       drawerLabel: 'Conductores',
-    //       headerShown: true,
-    //       headerTitle: '',
-    //     }}
-    //   />
-    // </Drawer>
+      <Drawer.Screen
+        name="(conductor)"
+        options={{
+          drawerLabel: 'Conductores',
+          headerShown: true,
+          headerTitle: '',
+        }}
+      />
+    </Drawer>
   );
 }

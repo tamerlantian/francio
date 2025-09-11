@@ -3,8 +3,8 @@ import { House, Package } from 'lucide-react-native';
 
 export default function TabsLayout() {
   return (
-    // <Tabs screenOptions={{ headerShown: false, tabBarShowLabel: false }}>
-      {/* <Tabs.Screen
+    <Tabs screenOptions={{ headerShown: false, tabBarShowLabel: false }}>
+      <Tabs.Screen
         name="index"
         options={{
           headerShown: false,
@@ -17,7 +17,7 @@ export default function TabsLayout() {
           headerShown: false,
           tabBarIcon: ({ color, size }) => <Package size={size} color={color} />,
         }}
-      /> */}
-    // </Tabs>
+      />
+    </Tabs>
   );
 }
