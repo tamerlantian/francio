@@ -1,113 +1,113 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Conductor } from '../interfaces/conductor.interface';
+import { Conductor, ConductorResponse } from '../interfaces/conductor.interface';
 import { conductorStyles } from '../styles/conductor.style';
 
-// Función para formatear fecha
-const formatDate = (dateString: string | null | undefined) => {
+// Función para formatear fecha de vencimiento
+const formatExpirationDate = (dateString: string | null | undefined) => {
   if (!dateString) return 'N/A';
   const date = new Date(dateString);
-  return date.toLocaleDateString('es-ES', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  });
+  const now = new Date();
+  const diffTime = date.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 0) return 'Vencida';
+  if (diffDays <= 30) return `${diffDays}d`;
+  if (diffDays <= 365) return `${Math.ceil(diffDays / 30)}m`;
+  return `${Math.ceil(diffDays / 365)}a`;
+};
+
+// Función para determinar el color del estado de la licencia
+const getLicenseStatusColor = (dateString: string | null | undefined) => {
+  if (!dateString) return '#f5222d';
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffTime = date.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 0) return '#f5222d'; // Rojo - vencida
+  if (diffDays <= 30) return '#fa8c16'; // Naranja - próxima a vencer
+  return '#52c41a'; // Verde - vigente
 };
 
 interface ConductorCardProps {
-  conductor: Conductor;
-  onPress?: (_conductor: Conductor) => void;
+  conductor: ConductorResponse;
+  onPress?: (_conductor: ConductorResponse) => void;
 }
 
 export const ConductorCard = ({ conductor, onPress }: ConductorCardProps) => {
   // Nombre completo del conductor
-  const nombreCompleto = `${conductor.nombre1} ${conductor.nombre2 ? conductor.nombre2 + ' ' : ''}
-    ${conductor.apellido1} ${conductor.apellido2 || ''}`.trim();
-
-  // Estado del conductor (activo/inactivo)
-  const isActive = !conductor.estado_inactivo;
+  const nombreCompleto = `${conductor.nombre1} ${
+    conductor.nombre2 ? conductor.nombre2 + ' ' : ''
+  }${conductor.apellido1} ${conductor.apellido2 || ''}`.trim();
 
   return (
     <TouchableOpacity
-      style={conductorStyles.conductorCard}
+      style={conductorStyles.compactCard}
       onPress={() => onPress && onPress(conductor)}
+      activeOpacity={0.7}
     >
-      {/* Conductor Header */}
-      <View style={conductorStyles.conductorHeader}>
-        <View style={conductorStyles.nameContainer}>
-          <Text style={conductorStyles.fullName}>{nombreCompleto}</Text>
-          <Text style={conductorStyles.identification}>
-            {conductor.identificacion__nombre}: {conductor.numero_identificacion}
+      {/* Header compacto con nombre y estado */}
+      <View style={conductorStyles.compactHeader}>
+        <View style={conductorStyles.driverInfo}>
+          <Text style={conductorStyles.driverName} numberOfLines={1}>
+            {nombreCompleto}
+          </Text>
+          <Text style={conductorStyles.driverLocation} numberOfLines={1}>
+            {conductor.ciudad__nombre}, {conductor.direccion}
           </Text>
         </View>
-        <View
-          style={[
-            conductorStyles.statusBadge,
-            { backgroundColor: isActive ? '#e6f7ff' : '#fff1f0' },
-          ]}
-        >
-          <Text style={[conductorStyles.statusText, { color: isActive ? '#0066cc' : '#f5222d' }]}>
-            {isActive ? 'Activo' : 'Inactivo'}
+        <View style={conductorStyles.statusContainer}></View>
+      </View>
+
+      {/* Información clave en grid compacto */}
+      <View style={conductorStyles.infoGrid}>
+        <View style={conductorStyles.infoItem}>
+          <Text style={conductorStyles.infoLabel}>ID</Text>
+          <Text style={conductorStyles.infoValue} numberOfLines={1}>
+            {conductor.numero_identificacion}
           </Text>
+        </View>
+        <View style={conductorStyles.infoItem}>
+          <Text style={conductorStyles.infoLabel}>Licencia</Text>
+          <Text style={conductorStyles.infoValue} numberOfLines={1}>
+            {conductor.numero_licencia}
+          </Text>
+        </View>
+        <View style={conductorStyles.infoItem}>
+          <Text style={conductorStyles.infoLabel}>Categoría</Text>
+          <Text style={conductorStyles.infoValue} numberOfLines={1}>
+            {conductor.categoria_licencia__nombre}
+          </Text>
+        </View>
+        <View style={conductorStyles.infoItem}>
+          <Text style={conductorStyles.infoLabel}>Vence en</Text>
+          <Text numberOfLines={1}>{formatExpirationDate(conductor.fecha_vence_licencia)}</Text>
         </View>
       </View>
 
-      {/* Conductor Details */}
-      <View style={conductorStyles.conductorDetails}>
-        <View style={conductorStyles.detailRow}>
-          <Text style={conductorStyles.label}>Ciudad:</Text>
-          <Text style={conductorStyles.value}>{conductor.ciudad__nombre}</Text>
-        </View>
-        <View style={conductorStyles.detailRow}>
-          <Text style={conductorStyles.label}>Estado:</Text>
-          <Text style={conductorStyles.value}>{conductor.ciudad__estado__nombre}</Text>
-        </View>
-        <View style={conductorStyles.detailRow}>
-          <Text style={conductorStyles.label}>Tipo:</Text>
-          <Text style={conductorStyles.value}>{conductor.propio ? 'Propio' : 'Externo'}</Text>
-        </View>
-
-        {/* License Info */}
-        <View style={conductorStyles.licenseInfo}>
-          <View style={conductorStyles.licenseRow}>
-            <Text style={conductorStyles.licenseLabel}>Licencia:</Text>
-            <Text style={conductorStyles.licenseValue}>{conductor.numero_licencia}</Text>
-          </View>
-          <View style={conductorStyles.licenseRow}>
-            <Text style={conductorStyles.licenseLabel}>Categoría:</Text>
-            <Text style={conductorStyles.licenseValue}>{conductor.categoria_licencia}</Text>
-          </View>
-          <View style={conductorStyles.licenseRow}>
-            <Text style={conductorStyles.licenseLabel}>Vence:</Text>
-            <Text style={conductorStyles.licenseValue}>
-              {formatDate(conductor.fecha_vence_licencia)}
-            </Text>
-          </View>
-        </View>
-
-        {/* Contact Buttons */}
-        <View style={conductorStyles.contactContainer}>
+      {/* Footer con tipo y contacto rápido */}
+      {/* <View style={conductorStyles.compactFooter}>
+        <View style={conductorStyles.quickActions}>
           {conductor.celular && (
             <TouchableOpacity
-              style={conductorStyles.contactButton}
+              style={conductorStyles.quickActionButton}
               onPress={() => console.log(`Llamar a ${conductor.celular}`)}
             >
-              <Ionicons name="call-outline" size={16} color="#0066cc" />
-              <Text style={conductorStyles.contactButtonText}>{conductor.celular}</Text>
+              <Ionicons name="call" size={16} color="#0066cc" />
             </TouchableOpacity>
           )}
           {conductor.correo && (
             <TouchableOpacity
-              style={conductorStyles.contactButton}
+              style={conductorStyles.quickActionButton}
               onPress={() => console.log(`Enviar correo a ${conductor.correo}`)}
             >
-              <Ionicons name="mail-outline" size={16} color="#0066cc" />
-              <Text style={conductorStyles.contactButtonText}>Correo</Text>
+              <Ionicons name="mail" size={16} color="#0066cc" />
             </TouchableOpacity>
           )}
         </View>
-      </View>
+      </View> */}
     </TouchableOpacity>
   );
 };

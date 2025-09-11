@@ -41,7 +41,7 @@ export default function ConductorScreen() {
   };
 
   // Función para manejar el envío del formulario
-  const handleFormSubmit = async (data: any) => {
+  const handleFormSubmit = async (_data: any) => {
     setIsFormLoading(true);
     try {
       // TODO: Implementar la lógica de guardado/actualización
