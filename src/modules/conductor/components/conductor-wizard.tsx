@@ -38,7 +38,6 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
     control,
     formState: { errors },
     handleSubmit,
-    watch,
     reset,
   } = useForm<Partial<Conductor>>({
     mode: 'onChange',
@@ -46,7 +45,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
   });
 
   // Watch form values for real-time updates
-  const formData = watch();
+  // const formData = watch();
 
   // Initialize form data only once
   useEffect(() => {
@@ -159,11 +158,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
         );
       case 4:
         return (
-          <ConfigurationStep
-            data={formData}
-            onDataChange={() => {}}
-            onValidationChange={validateStep4}
-          />
+          <ConfigurationStep control={control} errors={errors} onValidationChange={validateStep4} />
         );
       default:
         return null;

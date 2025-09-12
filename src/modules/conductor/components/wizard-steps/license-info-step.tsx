@@ -1,7 +1,6 @@
 import { useSeleccionarCategoriaLicencia } from '@/src/modules/vertical/hooks/use-vertical.hook';
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
 import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
-import { FormDatePickerController } from '@/src/shared/components/ui/form/FormDatePickerController';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { Control, FieldErrors, useWatch } from 'react-hook-form';
@@ -108,7 +107,7 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
         apiError={errorCategoriaLicencia}
       />
 
-      <FormDatePickerController
+      {/* <FormDatePickerController
         control={control}
         name="fecha_vence_licencia"
         label="Fecha de Vencimiento *"
@@ -120,7 +119,7 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
         }}
         minimumDate={new Date()}
         format="YYYY-MM-DD"
-      />
+      /> */}
 
       <View style={styles.infoBox}>
         <Ionicons name="information-circle-outline" size={20} color="#0066CC" />
