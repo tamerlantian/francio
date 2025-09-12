@@ -1,5 +1,6 @@
 import { ApiQueryParametros } from '@/src/core/interfaces/api.interface';
 import { HttpBaseRepository } from '../../../core/repositories/http-base.repository';
+import { ViajeListResponse } from '../interfaces/viaje.interface';
 
 /**
  * Repositorio para manejar las operaciones de API relacionadas con autenticación
@@ -32,7 +33,7 @@ export class ViajeRepository extends HttpBaseRepository {
    * @returns Promise con la respuesta del login
    */
   async getViajes(params: ApiQueryParametros = {}) {
-    return this.get<any>('vertical/viaje/lista/', params);
+    return this.get<ViajeListResponse>('vertical/viaje/lista/', params);
   }
 
   async aceptarViaje(viajeId: number, conductorId: number, vehiculoId: number) {

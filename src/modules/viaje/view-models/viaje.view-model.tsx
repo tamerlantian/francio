@@ -42,12 +42,14 @@ export const useAceptarViaje = () => {
       viajeId,
       conductorId,
       vehiculoId,
+      schemaName,
     }: {
       viajeId: number;
       conductorId: number;
       vehiculoId: number;
+      schemaName: string;
     }) => {
-      return viajeController.aceptarViaje(viajeId, conductorId, vehiculoId);
+      return viajeController.aceptarViaje(viajeId, conductorId, vehiculoId, schemaName);
     },
     onSuccess: () => {
       // Invalidar la consulta de viajes para que se actualice la lista

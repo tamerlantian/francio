@@ -1,14 +1,19 @@
 export interface Datos {
   id: number;
   fecha: string;
-  cliente: string;
+  numero_identificacion: string | null;
+  cliente: string | null;
   unidades: number;
   peso: number;
   volumen: number;
   puntos_entrega: number;
-  comentario?: string;
+  comentario: string | null;
   propuestas: number;
   estado_aceptado: boolean;
+  flete: number;
+  pago: number;
+  schema_name: string;
+  contenedor_id: number;
   ciudad_origen_id: number;
   ciudad_origen__nombre: string;
   ciudad_destino_id: number;
@@ -21,7 +26,6 @@ export interface Datos {
   empaque__nombre: string;
   usuario_id: number;
   usuario__nombre_corto: string;
-  pago: number;
 }
 
 export interface Viaje {

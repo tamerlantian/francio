@@ -72,6 +72,7 @@ export default function ViajeScreen() {
           viajeId: selectedViaje.datos.id,
           conductorId: parseInt(formData.conductor_id),
           vehiculoId: parseInt(formData.vehiculo_id),
+          schemaName: selectedViaje.datos.schema_name,
         },
         {
           onSuccess: () => {
