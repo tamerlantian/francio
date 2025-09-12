@@ -1,5 +1,6 @@
 import CustomBottomSheet from '@/src/shared/components/bottom-sheet/bottom-sheet';
 import { DevModeSelector } from '@/src/shared/components/bottom-sheet/dev-mode-selector';
+import { useDevMode } from '@/src/shared/context/dev-mode-context';
 import { FormButton } from '@/src/shared/components/ui/button/FormButton';
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
 import { PasswordInputController } from '@/src/shared/components/ui/form/PasswordInputController';
@@ -18,6 +19,9 @@ import { useRegister } from '../view-models/register.view-model';
 export const RegisterScreen = () => {
   // ViewModel para registro
   const { register, isLoading } = useRegister();
+
+  // Contexto de modo desarrollador
+  const { isDeveloperMode } = useDevMode();
 
   // Referencia al bottom sheet
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -66,11 +70,25 @@ export const RegisterScreen = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* Botón de modo desarrollador */}
+      {/* Botón de modo desarrollador con indicador */}
       <TouchableOpacity style={loginStyles.devModeButton} onPress={handleOpenDevModeSheet}>
         <Ionicons name="settings" size={24} color="#666" className="mt-6" />
+        {isDeveloperMode && (
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              width: 12,
+              height: 12,
+              borderRadius: 6,
+              backgroundColor: '#4CAF50',
+              borderWidth: 1,
+              borderColor: '#fff',
+            }}
+          />
+        )}
       </TouchableOpacity>
-
       <View style={{ flex: 1 }}>
         <ScrollView
           contentContainerStyle={loginStyles.container}
@@ -184,6 +202,25 @@ export const RegisterScreen = () => {
               <Text style={loginStyles.footerLink}>Iniciar Sesión</Text>
             </TouchableOpacity>
           </View>
+
+          {isDeveloperMode && (
+            <View
+              style={{
+                paddingHorizontal: 8,
+                paddingVertical: 3,
+                backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                borderRadius: 4,
+                borderWidth: 1,
+                alignSelf: 'center',
+                borderColor: '#4CAF50',
+                marginTop: 16,
+              }}
+            >
+              <Text style={{ fontSize: 10, color: '#4CAF50', fontWeight: 'bold' }}>
+                MODO DESARROLLO
+              </Text>
+            </View>
+          )}
         </ScrollView>
 
         {/* Bottom Sheet para el selector de modo desarrollador */}
@@ -191,6 +228,7 @@ export const RegisterScreen = () => {
           <DevModeSelector onClose={handleCloseDevModeSheet} />
         </CustomBottomSheet>
       </View>
+      P
     </SafeAreaView>
   );
 };
