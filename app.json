@@ -1,22 +1,24 @@
 {
   "expo": {
-    "name": "rn-expo-mvvc",
-    "slug": "rn-expo-mvvc",
+    "name": "francio",
+    "slug": "francio",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "rnexpomvvc",
+    "scheme": "francio",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.francio"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.anonymous.francio"
     },
     "web": {
       "bundler": "metro",
