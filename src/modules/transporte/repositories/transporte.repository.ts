@@ -32,8 +32,8 @@ class TransporteRepository extends HttpBaseRepository {
    * @param viajeId ID del viaje
    */
   async nuevoViaje(viajeId: number, schema: string) {
-    const url = await buildUrlWithSubdomain(schema, 'vertical/despacho/nuevo-viaje/');
-    return this.get<ApiResponse<any>>(url, { viaje_id: viajeId });
+    const url = await buildUrlWithSubdomain(schema, 'transporte/despacho/nuevo-viaje/');
+    return this.post<ApiResponse<any>>(url, { viaje_id: viajeId });
   }
 }
 
