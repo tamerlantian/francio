@@ -6,6 +6,7 @@ import React, { useEffect } from 'react';
 import { Control, FieldErrors, useWatch } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Conductor } from '../../interfaces/conductor.interface';
+import { FormDatePickerController } from '@/src/shared/components/ui/form/FormDatePickerController';
 
 interface LicenseInfoStepProps {
   control: Control<Partial<Conductor>>;
@@ -107,7 +108,7 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
         apiError={errorCategoriaLicencia}
       />
 
-      {/* <FormDatePickerController
+      <FormDatePickerController
         control={control}
         name="fecha_vence_licencia"
         label="Fecha de Vencimiento *"
@@ -119,7 +120,7 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
         }}
         minimumDate={new Date()}
         format="YYYY-MM-DD"
-      /> */}
+      />
 
       <View style={styles.infoBox}>
         <Ionicons name="information-circle-outline" size={20} color="#0066CC" />
