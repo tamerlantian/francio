@@ -124,7 +124,7 @@ const Toast: React.FC<ToastProps> = ({ type, message, onClose, placement = 'bott
         <View style={styles.iconContainer}>
           <Ionicons name={getIcon()} size={22} color="#FFFFFF" />
         </View>
-        <Text style={styles.message} numberOfLines={2}>
+        <Text style={styles.message} numberOfLines={6}>
           {message}
         </Text>
       </View>

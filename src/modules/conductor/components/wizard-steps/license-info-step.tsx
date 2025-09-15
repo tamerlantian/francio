@@ -1,12 +1,11 @@
 import { useSeleccionarCategoriaLicencia } from '@/src/modules/vertical/hooks/use-vertical.hook';
+import { FormDatePickerController } from '@/src/shared/components/ui/form/FormDatePickerController';
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
 import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
-import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { Control, FieldErrors, useWatch } from 'react-hook-form';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import { Conductor } from '../../interfaces/conductor.interface';
-import { FormDatePickerController } from '@/src/shared/components/ui/form/FormDatePickerController';
 
 interface LicenseInfoStepProps {
   control: Control<Partial<Conductor>>;
@@ -122,7 +121,7 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
         format="YYYY-MM-DD"
       />
 
-      <View style={styles.infoBox}>
+      {/* <View style={styles.infoBox}>
         <Ionicons name="information-circle-outline" size={20} color="#0066CC" />
         <View style={styles.infoContent}>
           <Text style={styles.infoTitle}>Información importante</Text>
@@ -140,7 +139,7 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
           <Text style={styles.helpBold}>B1, B2, B3:</Text> Automóviles y camionetas{'\n'}
           <Text style={styles.helpBold}>C1, C2, C3:</Text> Camiones y vehículos de carga
         </Text>
-      </View>
+      </View> */}
     </ScrollView>
   );
 };

@@ -18,7 +18,7 @@ export const createToastStyles = () =>
       shadowRadius: 8,
       elevation: 6,
       maxWidth: width * 0.9,
-      minWidth: width * 0.7,
+      minWidth: width * 0.8,
       marginHorizontal: 16,
     },
     contentContainer: {

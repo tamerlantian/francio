@@ -2,33 +2,44 @@ import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ConductorWizard } from '../components/conductor-wizard';
 import { Conductor } from '../interfaces/conductor.interface';
-import { useCreateConductor } from '../view-models/conductor.view-model';
+import { useConductorById, useUpdateConductor } from '../view-models/conductor.view-model';
 import { router } from 'expo-router';
+import { LoadingSpinner } from '@/src/shared/components/ui/loading/LoadingSpinner';
+import { ErrorState } from '@/src/shared/components/ui/error-state/ErrorState';
 import { View, StyleSheet } from 'react-native';
 import { ConfirmationDialog } from '@/src/shared/components/ui/dialog/ConfirmationDialog';
 import { ErrorAlert } from '@/src/shared/components/ui/alert/ErrorAlert';
+import { ApiErrorResponse } from '@/src/core/interfaces/api.interface';
 
-export default function ConductorNuevoScreen() {
-  const { mutateAsync: createConductor } = useCreateConductor();
+interface ConductorEditScreenProps {
+  conductorId: string;
+}
+
+export default function ConductorEditScreen({ conductorId }: ConductorEditScreenProps) {
+  // Obtenemos los datos del conductor usando el ID
+  const { conductor, isLoading, isError } = useConductorById(conductorId);
   const [hasChanges, setHasChanges] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const { mutateAsync: updateConductor } = useUpdateConductor();
+
   const handleSubmit = async (data: Partial<Conductor>) => {
     try {
       setIsSubmitting(true);
       setErrorMessage(null);
-      await createConductor(data as Conductor);
-      // Navigate back to conductor list after successful creation
-      router.back();
+      // Aseguramos que el ID esté presente en los datos
+      if (conductor && data) {
+        await updateConductor({ ...conductor, ...data } as Conductor);
+        router.back();
+      }
     } catch (error) {
-      console.error('Error al crear conductor:', error);
-      // Mostrar mensaje de error
+      const errorParsed = error as ApiErrorResponse;
       setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : 'Ha ocurrido un error al crear el conductor. Por favor, inténtalo de nuevo.',
+        errorParsed?.mensaje
+          ? errorParsed?.mensaje
+          : 'Ha ocurrido un error al actualizar el conductor. Por favor, inténtalo de nuevo.',
       );
       setIsSubmitting(false);
     }
@@ -51,15 +62,32 @@ export default function ConductorNuevoScreen() {
     setHasChanges(hasChanged);
   };
 
+  // Si está cargando, mostramos un indicador
+  if (isLoading) {
+    return <LoadingSpinner message="Cargando datos del conductor..." />;
+  }
+
+  // Si hay un error, mostramos un mensaje
+  if (isError || !conductor) {
+    return (
+      <ErrorState
+        title="Error al cargar el conductor"
+        subtitle="No se pudo encontrar la información del conductor solicitado"
+        onRetry={() => router.back()}
+      />
+    );
+  }
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }} edges={['left', 'right']}>
-      {/* <BackHeader title="Nuevo Conductor" onBack={handleCancel} /> */}
-      {errorMessage && (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }} edges={['top', 'left', 'right']}>
+      {/* <BackHeader title="Editar Conductor" onBack={handleCancel} /> */}
+      {/* {errorMessage && (
         <ErrorAlert message={errorMessage} onDismiss={() => setErrorMessage(null)} />
-      )}
+      )} */}
       <View style={styles.container}>
         <ConductorWizard
-          mode="create"
+          mode="edit"
+          initialData={conductor}
           onSubmit={handleSubmit}
           onCancel={handleCancel}
           onFormChange={handleFormChange}
@@ -83,7 +111,6 @@ export default function ConductorNuevoScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
     backgroundColor: '#FFFFFF',
   },
 });

@@ -3,6 +3,7 @@ import { conductorController } from '../controllers/conductor.controller';
 import { Conductor } from '../interfaces/conductor.interface';
 import { useToast } from '@/src/shared/hooks/use-toast.hook';
 import { ApiErrorResponse } from '@/src/core/interfaces/api.interface';
+import { mapConductorResponseToConductor } from '../utils/conductor-mapper.util';
 
 export const conductorKeys = {
   all: ['conductores'] as const,
@@ -33,14 +34,15 @@ export const useConductorById = (id: string) => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: conductorKeys.detail(id),
     queryFn: async () => {
-      const response = await conductorController.getConductores({ id });
-      return response.conductores?.[0] || null;
+      const response = await conductorController.getConductorById(id);
+      // Mapear la respuesta para asegurar que los tipos sean correctos
+      return mapConductorResponseToConductor(response);
     },
     enabled: !!id,
   });
 
   return {
-    conductor: data as Conductor | null,
+    conductor: data,
     isLoading,
     isError,
     error,
@@ -62,6 +64,32 @@ export const useCreateConductor = () => {
     onError: (error: unknown) => {
       const errorParsed = error as ApiErrorResponse;
       toast.error(errorParsed?.mensaje || 'Error al crear el conductor');
+    },
+  });
+
+  return {
+    mutateAsync,
+    isError,
+    error,
+  };
+};
+
+/**
+ * Hook para actualizar un conductor existente
+ */
+export const useUpdateConductor = () => {
+  const queryClient = useQueryClient();
+  const toast = useToast();
+  const { mutateAsync, isError, error } = useMutation({
+    mutationFn: (data: Conductor) => conductorController.updateConductor(data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: conductorKeys.list() });
+      queryClient.invalidateQueries({ queryKey: conductorKeys.detail(variables.id.toString()) });
+      toast.success('Conductor actualizado exitosamente');
+    },
+    onError: (error: unknown) => {
+      const errorParsed = error as ApiErrorResponse;
+      toast.error(errorParsed?.mensaje || 'Error al actualizar el conductor');
     },
   });
 

@@ -1,9 +1,9 @@
 export interface Conductor {
   id: number;
-  identificacion: number;
+  identificacion: string;
   identificacion__nombre: string;
   digito_verificacion: number;
-  ciudad: number;
+  ciudad: string;
   ciudad__nombre: string;
   ciudad__estado__nombre: string;
   numero_identificacion: string;
@@ -19,6 +19,7 @@ export interface Conductor {
   numero_licencia: string;
   categoria_licencia: string;
   fecha_vence_licencia: string;
+  verificado: boolean;
 }
 
 export interface ConductorResponse {
@@ -41,6 +42,7 @@ export interface ConductorResponse {
   numero_identificacion: string;
   numero_licencia: string;
   telefono: string;
+  verificado: boolean;
 }
 
 export interface ConductorSelector {

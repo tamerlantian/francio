@@ -1,76 +1,26 @@
-import CustomBottomSheet from '@/src/shared/components/bottom-sheet/bottom-sheet';
 import { ErrorState } from '@/src/shared/components/ui/error-state/ErrorState';
 import { LoadingSpinner } from '@/src/shared/components/ui/loading/LoadingSpinner';
 import { Ionicons } from '@expo/vector-icons';
-import BottomSheet from '@gorhom/bottom-sheet';
-import { useRef, useState } from 'react';
+import { router } from 'expo-router';
 import { FlatList, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ConductorCard } from '../components/conductor-card';
-import ConductorFormulario from '../components/conductor-formulario';
-import { Conductor, ConductorResponse } from '../interfaces/conductor.interface';
+import { ConductorResponse } from '../interfaces/conductor.interface';
 import { conductorStyles } from '../styles/conductor.style';
-import { useConductor, useCreateConductor } from '../view-models/conductor.view-model';
+import { useConductor } from '../view-models/conductor.view-model';
 // Componente principal de la pantalla de conductores
 export default function ConductorScreen() {
   // Utilizamos el ViewModel para obtener los datos
   const { conductores, isLoading, isError, refetch } = useConductor();
-  const { mutateAsync: createConductor } = useCreateConductor();
-  const bottomSheetRef = useRef<BottomSheet>(null);
 
-  // Estado para manejar el modo del formulario y el conductor seleccionado
-  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
-  const [selectedConductor, setSelectedConductor] = useState<Conductor | null>(null);
-  const [isFormLoading, setIsFormLoading] = useState(false);
-
-  // Función para abrir el modal de creación
-  const handleOpenCreateModal = () => {
-    setFormMode('create');
-    setSelectedConductor(null);
-    bottomSheetRef.current?.expand();
+  // Función para navegar a la pantalla de creación
+  const handleOpenCreate = () => {
+    router.push('/(app)/(conductor)/nuevo');
   };
 
-  // Función para convertir ConductorResponse a Conductor
-  const conductorResponseToConductor = (response: ConductorResponse): Conductor => {
-    return {
-      ...response,
-      identificacion__nombre: '',
-      digito_verificacion: 0,
-      ciudad__estado__nombre: '',
-      categoria_licencia: response.categoria_licencia__nombre || '',
-    };
-  };
-
-  // Función para abrir el modal de edición
-  const handleOpenEditModal = (conductor: ConductorResponse) => {
-    setFormMode('edit');
-    setSelectedConductor(conductorResponseToConductor(conductor));
-    bottomSheetRef.current?.expand();
-  };
-
-  // Función para cerrar el bottom sheet
-  const handleCloseModal = () => {
-    bottomSheetRef.current?.close();
-    setSelectedConductor(null);
-  };
-
-  // Función para manejar el envío del formulario
-  const handleFormSubmit = async (data: Partial<Conductor>) => {
-    setIsFormLoading(true);
-    try {
-      if (formMode === 'create') {
-        // For create, we need to ensure we have a complete Conductor object
-        // You may need to add validation or default values here
-        await createConductor(data as Conductor);
-      } else {
-        // await updateConductor(data);
-      }
-      handleCloseModal();
-    } catch (error) {
-      console.error('Error al guardar conductor:', error);
-    } finally {
-      setIsFormLoading(false);
-    }
+  // Función para navegar a la pantalla de edición
+  const handleOpenEdit = (conductor: ConductorResponse) => {
+    router.push(`/(app)/(conductor)/editar/${conductor.id}`);
   };
 
   // Si está cargando, mostramos un indicador
@@ -102,9 +52,7 @@ export default function ConductorScreen() {
         <FlatList
           data={conductores}
           keyExtractor={item => item.id.toString()}
-          renderItem={({ item }) => (
-            <ConductorCard conductor={item} onPress={handleOpenEditModal} />
-          )}
+          renderItem={({ item }) => <ConductorCard conductor={item} onPress={handleOpenEdit} />}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
             <View style={{ flex: 1, justifyContent: 'center', minHeight: 300 }}>
@@ -127,20 +75,10 @@ export default function ConductorScreen() {
         />
 
         {/* Botón flotante para agregar un nuevo conductor */}
-        <TouchableOpacity style={conductorStyles.addButton} onPress={handleOpenCreateModal}>
+        <TouchableOpacity style={conductorStyles.addButton} onPress={handleOpenCreate}>
           <Ionicons name="add" size={24} color="white" />
         </TouchableOpacity>
       </View>
-
-      <CustomBottomSheet ref={bottomSheetRef} initialSnapPoints={['85%']}>
-        <ConductorFormulario
-          initialData={selectedConductor || undefined}
-          onSubmit={handleFormSubmit}
-          onCancel={handleCloseModal}
-          isLoading={isFormLoading}
-          mode={formMode}
-        />
-      </CustomBottomSheet>
     </SafeAreaView>
   );
 }

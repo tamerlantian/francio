@@ -53,4 +53,22 @@ export class ConductorRepository extends HttpBaseRepository {
   async createConductor(data: Conductor) {
     return this.post<ApiResponse<ConductorResponse>>('vertical/conductor/', data);
   }
+
+  /**
+   * Obtiene un conductor por su ID
+   * @param id ID del conductor
+   * @returns Promise con la respuesta del conductor
+   */
+  async getConductorById(id: string) {
+    return this.get<ConductorResponse>(`vertical/conductor/${id}/`);
+  }
+
+  /**
+   * Actualiza un conductor existente
+   * @param data Datos del conductor a actualizar
+   * @returns Promise con la respuesta de la actualización del conductor
+   */
+  async updateConductor(data: Conductor) {
+    return this.put<ConductorResponse>(`vertical/conductor/${data.id}/`, data);
+  }
 }

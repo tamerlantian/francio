@@ -7,6 +7,7 @@ import { Conductor } from '../interfaces/conductor.interface';
 import { ContactInfoStep } from './wizard-steps/contact-info-step';
 import { LicenseInfoStep } from './wizard-steps/license-info-step';
 import { ConfigurationStep } from './wizard-steps/configuration-step';
+import { digitoVerificacion } from '@/src/shared/utils/digito-verificacion.util';
 
 interface ConductorWizardProps {
   initialData?: Partial<Conductor>;
@@ -14,6 +15,7 @@ interface ConductorWizardProps {
   onCancel: () => void;
   isLoading?: boolean;
   mode: 'create' | 'edit';
+  onFormChange?: (_hasChanges: boolean) => void;
 }
 
 const STEPS = [
@@ -29,6 +31,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
   onCancel,
   isLoading = false,
   mode,
+  onFormChange,
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [stepValidation, setStepValidation] = useState<Record<number, boolean>>({});
@@ -36,7 +39,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
   // Centralized form management
   const {
     control,
-    formState: { errors },
+    formState: { errors, isDirty },
     handleSubmit,
     reset,
   } = useForm<Partial<Conductor>>({
@@ -44,8 +47,12 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
     defaultValues: initialData,
   });
 
-  // Watch form values for real-time updates
-  // const formData = watch();
+  // Notify parent component about form changes
+  useEffect(() => {
+    if (onFormChange) {
+      onFormChange(isDirty);
+    }
+  }, [isDirty, onFormChange]);
 
   // Initialize form data only once
   useEffect(() => {
@@ -88,6 +95,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
       const dataWithShortName = {
         ...data,
         nombre_corto: `${nombre1} ${apellido1}`.trim(),
+        digito_verificacion: Number(digitoVerificacion(Number(data.numero_identificacion))),
       };
       onSubmit(dataWithShortName);
     })();
@@ -241,7 +249,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   header: {
-    padding: 20,
+    paddingHorizontal: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E5E5',
   },
@@ -275,6 +283,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 10,
   },
   stepIndicatorContainer: {
     flexDirection: 'row',

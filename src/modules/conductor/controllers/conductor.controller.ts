@@ -33,4 +33,24 @@ export const conductorController = {
       throw error;
     }
   },
+
+  // Obtener un conductor por su ID
+  getConductorById: async (id: string) => {
+    try {
+      const response = await ConductorRepository.getInstance().getConductorById(id);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Actualizar un conductor existente
+  updateConductor: async (data: Conductor) => {
+    try {
+      const response = await ConductorRepository.getInstance().updateConductor(data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
