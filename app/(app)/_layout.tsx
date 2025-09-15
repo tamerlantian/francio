@@ -83,6 +83,14 @@ export default function AppLayout() {
           headerTitle: '',
         }}
       />
+
+      <Drawer.Screen
+        name="(vehiculo)"
+        options={{
+          drawerLabel: 'Vehículos',
+          headerTitle: '',
+        }}
+      />
     </Drawer>
   );
 }

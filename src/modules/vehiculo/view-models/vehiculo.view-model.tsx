@@ -1,6 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { vehiculoController } from '../controllers/vehiculo.controller';
 import { Vehiculo } from '../interfaces/vehiculo.interface';
+import { useToast } from '@/src/shared/hooks/use-toast.hook';
+import { ApiErrorResponse } from '@/src/core/interfaces/api.interface';
 
 export const vehiculoKeys = {
   all: ['vehiculos'] as const,
@@ -31,15 +33,66 @@ export const useVehiculoById = (id: string) => {
   const { data, isLoading, isError, error } = useQuery({
     queryKey: vehiculoKeys.detail(id),
     queryFn: async () => {
-      const response = await vehiculoController.getVehiculos({ id });
-      return response.vehiculos?.[0] || null;
+      const response = await vehiculoController.getVehiculoById(id);
+      return response;
     },
     enabled: !!id,
   });
 
   return {
-    vehiculo: data as Vehiculo | null,
+    vehiculo: data,
     isLoading,
+    isError,
+    error,
+  };
+};
+
+/**
+ * Crea un nuevo vehículo
+ */
+export const useCreateVehiculo = () => {
+  const queryClient = useQueryClient();
+  const toast = useToast();
+  const { mutateAsync, isError, error } = useMutation({
+    mutationFn: (data: Vehiculo) => vehiculoController.createVehiculo(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: vehiculoKeys.list() });
+      toast.success('Vehículo creado exitosamente');
+    },
+    onError: (error: unknown) => {
+      const errorParsed = error as ApiErrorResponse;
+      toast.error(errorParsed?.mensaje || 'Error al crear el vehículo');
+    },
+  });
+
+  return {
+    mutateAsync,
+    isError,
+    error,
+  };
+};
+
+/**
+ * Hook para actualizar un vehículo existente
+ */
+export const useUpdateVehiculo = () => {
+  const queryClient = useQueryClient();
+  const toast = useToast();
+  const { mutateAsync, isError, error } = useMutation({
+    mutationFn: (data: Vehiculo) => vehiculoController.updateVehiculo(data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: vehiculoKeys.list() });
+      queryClient.invalidateQueries({ queryKey: vehiculoKeys.detail(variables.id.toString()) });
+      toast.success('Vehículo actualizado exitosamente');
+    },
+    onError: (error: unknown) => {
+      const errorParsed = error as ApiErrorResponse;
+      toast.error(errorParsed?.mensaje || 'Error al actualizar el vehículo');
+    },
+  });
+
+  return {
+    mutateAsync,
     isError,
     error,
   };
