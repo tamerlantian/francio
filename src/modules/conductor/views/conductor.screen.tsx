@@ -8,7 +8,7 @@ import { FlatList, RefreshControl, Text, TouchableOpacity, View } from 'react-na
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ConductorCard } from '../components/conductor-card';
 import ConductorFormulario from '../components/conductor-formulario';
-import { Conductor } from '../interfaces/conductor.interface';
+import { Conductor, ConductorResponse } from '../interfaces/conductor.interface';
 import { conductorStyles } from '../styles/conductor.style';
 import { useConductor, useCreateConductor } from '../view-models/conductor.view-model';
 // Componente principal de la pantalla de conductores
@@ -30,10 +30,21 @@ export default function ConductorScreen() {
     bottomSheetRef.current?.expand();
   };
 
+  // Función para convertir ConductorResponse a Conductor
+  const conductorResponseToConductor = (response: ConductorResponse): Conductor => {
+    return {
+      ...response,
+      identificacion__nombre: '',
+      digito_verificacion: 0,
+      ciudad__estado__nombre: '',
+      categoria_licencia: response.categoria_licencia__nombre || '',
+    };
+  };
+
   // Función para abrir el modal de edición
-  const handleOpenEditModal = (conductor: Conductor) => {
+  const handleOpenEditModal = (conductor: ConductorResponse) => {
     setFormMode('edit');
-    setSelectedConductor(conductor);
+    setSelectedConductor(conductorResponseToConductor(conductor));
     bottomSheetRef.current?.expand();
   };
 
@@ -44,11 +55,13 @@ export default function ConductorScreen() {
   };
 
   // Función para manejar el envío del formulario
-  const handleFormSubmit = async (data: Conductor) => {
+  const handleFormSubmit = async (data: Partial<Conductor>) => {
     setIsFormLoading(true);
     try {
       if (formMode === 'create') {
-        await createConductor(data);
+        // For create, we need to ensure we have a complete Conductor object
+        // You may need to add validation or default values here
+        await createConductor(data as Conductor);
       } else {
         // await updateConductor(data);
       }

@@ -109,6 +109,12 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
     );
   };
 
+  const cancelWizard = () => {
+    onCancel();
+    setCurrentStep(1);
+    reset();
+  };
+
   // Renderizar los pasos
   const renderStepIndicators = () => {
     return (
@@ -183,7 +189,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
             </TouchableOpacity>
           )}
 
-          <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={onCancel}>
+          <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={cancelWizard}>
             <Text style={styles.cancelButtonText}>Cancelar</Text>
           </TouchableOpacity>
 
