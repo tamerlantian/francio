@@ -1,4 +1,5 @@
 export const digitoVerificacion = (nit: number | undefined): string => {
+  console.log('nit', nit);
   if (!nit) {
     return '';
   }
@@ -6,6 +7,8 @@ export const digitoVerificacion = (nit: number | undefined): string => {
   if (isNaN(nit)) {
     return '';
   }
+
+  console.log('nit nit', nit);
 
   const arr: { [key: number]: number } = {
     1: 3,

@@ -6,30 +6,21 @@ import { useCreateConductor } from '../view-models/conductor.view-model';
 import { router } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
 import { ConfirmationDialog } from '@/src/shared/components/ui/dialog/ConfirmationDialog';
-import { ErrorAlert } from '@/src/shared/components/ui/alert/ErrorAlert';
 
 export default function ConductorNuevoScreen() {
   const { mutateAsync: createConductor } = useCreateConductor();
   const [hasChanges, setHasChanges] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = async (data: Partial<Conductor>) => {
     try {
       setIsSubmitting(true);
-      setErrorMessage(null);
       await createConductor(data as Conductor);
       // Navigate back to conductor list after successful creation
       router.back();
     } catch (error) {
       console.error('Error al crear conductor:', error);
-      // Mostrar mensaje de error
-      setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : 'Ha ocurrido un error al crear el conductor. Por favor, inténtalo de nuevo.',
-      );
       setIsSubmitting(false);
     }
   };
@@ -54,9 +45,9 @@ export default function ConductorNuevoScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#FFFFFF' }} edges={['left', 'right']}>
       {/* <BackHeader title="Nuevo Conductor" onBack={handleCancel} /> */}
-      {errorMessage && (
+      {/* {errorMessage && (
         <ErrorAlert message={errorMessage} onDismiss={() => setErrorMessage(null)} />
-      )}
+      )} */}
       <View style={styles.container}>
         <ConductorWizard
           mode="create"

@@ -43,8 +43,6 @@ export const FormSelector = ({
 }: FormSelectorProps) => {
   // Estado para controlar la visibilidad del modal
   const [modalVisible, setModalVisible] = useState(false);
-  console.log('options', options);
-  console.log('value', value);
 
   // Animaciones
   const fadeAnim = useRef(new Animated.Value(0)).current;

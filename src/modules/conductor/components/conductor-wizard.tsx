@@ -22,7 +22,7 @@ const STEPS = [
   { id: 1, title: 'Información Personal', icon: 'person-outline' },
   { id: 2, title: 'Contacto', icon: 'call-outline' },
   { id: 3, title: 'Licencia', icon: 'card-outline' },
-  { id: 4, title: 'Configuración', icon: 'settings-outline' },
+  // { id: 4, title: 'Configuración', icon: 'settings-outline' },
 ];
 
 export const ConductorWizard: React.FC<ConductorWizardProps> = ({
@@ -95,8 +95,10 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
       const dataWithShortName = {
         ...data,
         nombre_corto: `${nombre1} ${apellido1}`.trim(),
-        digito_verificacion: Number(digitoVerificacion(Number(data.numero_identificacion))),
+        digito_verificacion: digitoVerificacion(Number(data.numero_identificacion)),
       };
+
+      console.log('dataWithShortName', dataWithShortName);
       onSubmit(dataWithShortName);
     })();
   };

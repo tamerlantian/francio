@@ -2,7 +2,7 @@ export interface Conductor {
   id: number;
   identificacion: string;
   identificacion__nombre: string;
-  digito_verificacion: number;
+  digito_verificacion: string;
   ciudad: string;
   ciudad__nombre: string;
   ciudad__estado__nombre: string;
