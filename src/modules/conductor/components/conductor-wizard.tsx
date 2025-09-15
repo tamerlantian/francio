@@ -8,6 +8,7 @@ import { ContactInfoStep } from './wizard-steps/contact-info-step';
 import { LicenseInfoStep } from './wizard-steps/license-info-step';
 import { ConfigurationStep } from './wizard-steps/configuration-step';
 import { digitoVerificacion } from '@/src/shared/utils/digito-verificacion.util';
+import { cambiarANull } from '@/src/shared/utils/form.util';
 
 interface ConductorWizardProps {
   initialData?: Partial<Conductor>;
@@ -92,12 +93,17 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
       // Generar automáticamente el nombre_corto a partir de nombre1 y apellido1
       const nombre1 = data.nombre1 || '';
       const apellido1 = data.apellido1 || '';
+      const nombre2 = cambiarANull(data.nombre2);
+      const apellido2 = cambiarANull(data.apellido2);
+      const barrio = cambiarANull(data.barrio);
       const dataWithShortName = {
         ...data,
+        nombre2,
+        apellido2,
+        barrio,
         nombre_corto: `${nombre1} ${apellido1}`.trim(),
         digito_verificacion: digitoVerificacion(Number(data.numero_identificacion)),
       };
-
       onSubmit(dataWithShortName);
     })();
   };
