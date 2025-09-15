@@ -68,6 +68,92 @@ class VerticalRepository extends HttpBaseRepository {
       throw error;
     }
   }
+
+  /**
+   * Obtiene la lista de carrocerías para seleccionar
+   * @returns Promise con la respuesta de carrocerías
+   */
+  async getSeleccionarCarroceria(): Promise<Seleccionar[]> {
+    try {
+      const response = await this.get<Seleccionar[]>('vertical/carroceria/seleccionar/');
+      return response;
+    } catch (error) {
+      console.log('error al obtener carrocerias', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtiene la lista de colores para seleccionar
+   * @returns Promise con la respuesta de colores
+   */
+  async getSeleccionarColor(): Promise<Seleccionar[]> {
+    try {
+      const response = await this.get<Seleccionar[]>('vertical/color/seleccionar/');
+      return response;
+    } catch (error) {
+      console.log('error al obtener colores', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtiene la lista de combustibles para seleccionar
+   * @returns Promise con la respuesta de combustibles
+   */
+  async getSeleccionarCombustible(): Promise<Seleccionar[]> {
+    try {
+      const response = await this.get<Seleccionar[]>('vertical/combustible/seleccionar/');
+      return response;
+    } catch (error) {
+      console.log('error al obtener combustibles', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtiene la lista de configuraciones para seleccionar
+   * @returns Promise con la respuesta de configuraciones
+   */
+  async getSeleccionarConfiguracion(): Promise<Seleccionar[]> {
+    try {
+      const response = await this.get<Seleccionar[]>(
+        'vertical/vehiculo_configuracion/seleccionar/',
+      );
+      return response;
+    } catch (error) {
+      console.log('error al obtener configuraciones', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtiene la lista de líneas para seleccionar
+   * @returns Promise con la respuesta de líneas
+   */
+  async getSeleccionarLinea(): Promise<Seleccionar[]> {
+    try {
+      const response = await this.get<Seleccionar[]>('vertical/linea/seleccionar/');
+      return response;
+    } catch (error) {
+      console.log('error al obtener lineas', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Obtiene la lista de marcas para seleccionar
+   * @returns Promise con la respuesta de marcas
+   */
+  async getSeleccionarMarca(): Promise<Seleccionar[]> {
+    try {
+      const response = await this.get<Seleccionar[]>('vertical/marca/seleccionar/');
+      return response;
+    } catch (error) {
+      console.log('error al obtener marcas', error);
+      throw error;
+    }
+  }
 }
 
 export default VerticalRepository.getInstance();

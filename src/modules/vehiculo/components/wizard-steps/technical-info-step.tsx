@@ -1,4 +1,13 @@
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
+import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
+import {
+  useSeleccionarCarroceria,
+  useSeleccionarColor,
+  useSeleccionarCombustible,
+  useSeleccionarConfiguracion,
+  useSeleccionarLinea,
+  useSeleccionarMarca,
+} from '@/src/modules/vertical/hooks/use-vertical.hook';
 import React, { useEffect } from 'react';
 import { Control, FieldErrors, useWatch } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text, View, Switch } from 'react-native';
@@ -15,22 +24,52 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
   errors,
   onValidationChange,
 }) => {
+  // Load selector options
+  const { carroceriaOptions, isLoading: isLoadingCarroceria } = useSeleccionarCarroceria();
+  const { colorOptions, isLoading: isLoadingColor } = useSeleccionarColor();
+  const { combustibleOptions, isLoading: isLoadingCombustible } = useSeleccionarCombustible();
+  const { configuracionOptions, isLoading: isLoadingConfiguracion } = useSeleccionarConfiguracion();
+  const { lineaOptions, isLoading: isLoadingLinea } = useSeleccionarLinea();
+  const { marcaOptions, isLoading: isLoadingMarca } = useSeleccionarMarca();
   // Watch form values for validation
   const watchedValues = useWatch({
     control,
-    name: ['ejes', 'peso_vacio', 'capacidad', 'propio', 'remolque'],
+    name: [
+      'ejes',
+      'peso_vacio',
+      'capacidad',
+      'carroceria',
+      'color',
+      'combustible',
+      'configuracion',
+      'linea',
+      'marca',
+    ],
   });
 
   // Notify parent of validation changes based on form errors and required values
   useEffect(() => {
-    const technicalInfoFields = ['ejes', 'peso_vacio', 'capacidad'];
+    const technicalInfoFields = [
+      'ejes',
+      'peso_vacio',
+      'capacidad',
+      'carroceria',
+      'color',
+      'combustible',
+      'configuracion',
+      'linea',
+      'marca',
+    ];
 
     // Check for errors
     const hasErrors = technicalInfoFields.some(field => errors[field as keyof Partial<Vehiculo>]);
 
     // Check if required fields have values
-    const hasRequiredValues = technicalInfoFields.every((field, index) => {
+    const hasRequiredValues = technicalInfoFields.every((_, index) => {
       const value = watchedValues[index];
+      if (typeof value === 'number') {
+        return value !== undefined && value !== null;
+      }
       return value !== undefined && value !== null && value !== '';
     });
 
@@ -41,6 +80,12 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
     errors.ejes,
     errors.peso_vacio,
     errors.capacidad,
+    errors.carroceria,
+    errors.color,
+    errors.combustible,
+    errors.configuracion,
+    errors.linea,
+    errors.marca,
     watchedValues,
     onValidationChange,
   ]);
@@ -57,9 +102,9 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
         error={errors.ejes}
         placeholder="Ingresa el número de ejes"
         keyboardType="numeric"
-        rules={{ 
+        rules={{
           required: 'Este campo es obligatorio',
-          min: { value: 1, message: 'Debe tener al menos 1 eje' }
+          min: { value: 1, message: 'Debe tener al menos 1 eje' },
         }}
       />
 
@@ -71,9 +116,9 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
         error={errors.peso_vacio}
         placeholder="Ingresa el peso vacío en kilogramos"
         keyboardType="numeric"
-        rules={{ 
+        rules={{
           required: 'Este campo es obligatorio',
-          min: { value: 1, message: 'El peso debe ser mayor a 0' }
+          min: { value: 1, message: 'El peso debe ser mayor a 0' },
         }}
       />
 
@@ -85,22 +130,22 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
         error={errors.capacidad}
         placeholder="Ingresa la capacidad de carga en kilogramos"
         keyboardType="numeric"
-        rules={{ 
+        rules={{
           required: 'Este campo es obligatorio',
-          min: { value: 1, message: 'La capacidad debe ser mayor a 0' }
+          min: { value: 1, message: 'La capacidad debe ser mayor a 0' },
         }}
       />
 
       {/* Switches Section */}
       <View style={styles.switchSection}>
         <Text style={styles.sectionTitle}>Características del Vehículo</Text>
-        
+
         {/* Propio Switch */}
         <View style={styles.switchContainer}>
           <Text style={styles.switchLabel}>¿Es vehículo propio?</Text>
           <Switch
             value={watchedValues[3] || false}
-            onValueChange={(value) => {
+            onValueChange={value => {
               // This would be handled by the form controller
               // For now, we'll use a basic implementation
             }}
@@ -114,7 +159,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
           <Text style={styles.switchLabel}>¿Tiene remolque?</Text>
           <Switch
             value={watchedValues[4] || false}
-            onValueChange={(value) => {
+            onValueChange={value => {
               // This would be handled by the form controller
               // For now, we'll use a basic implementation
             }}
@@ -124,62 +169,86 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
         </View>
       </View>
 
-      {/* IDs Section - For now using simple inputs */}
+      {/* Vehicle Attributes Section */}
       <View style={styles.idsSection}>
-        <Text style={styles.sectionTitle}>Identificadores</Text>
-        
-        <FormInputController
+        <Text style={styles.sectionTitle}>Atributos del Vehículo</Text>
+
+        <FormSelectorController
           control={control}
-          name="carroceria_id"
-          label="ID Carrocería"
-          error={errors.carroceria_id}
-          placeholder="ID de carrocería"
-          keyboardType="numeric"
+          name="carroceria"
+          label="Carrocería *"
+          error={errors.carroceria}
+          placeholder="Selecciona una carrocería"
+          options={carroceriaOptions}
+          isLoading={isLoadingCarroceria}
+          rules={{
+            required: 'Este campo es obligatorio',
+          }}
         />
 
-        <FormInputController
+        <FormSelectorController
           control={control}
-          name="color_id"
-          label="ID Color"
-          error={errors.color_id}
-          placeholder="ID de color"
-          keyboardType="numeric"
+          name="color"
+          label="Color *"
+          error={errors.color}
+          placeholder="Selecciona un color"
+          options={colorOptions}
+          isLoading={isLoadingColor}
+          rules={{
+            required: 'Este campo es obligatorio',
+          }}
         />
 
-        <FormInputController
+        <FormSelectorController
           control={control}
-          name="combustible_id"
-          label="ID Combustible"
-          error={errors.combustible_id}
-          placeholder="ID de combustible"
-          keyboardType="numeric"
+          name="combustible"
+          label="Combustible *"
+          error={errors.combustible}
+          placeholder="Selecciona un combustible"
+          options={combustibleOptions}
+          isLoading={isLoadingCombustible}
+          rules={{
+            required: 'Este campo es obligatorio',
+          }}
         />
 
-        <FormInputController
+        <FormSelectorController
           control={control}
-          name="configuracion_id"
-          label="ID Configuración"
-          error={errors.configuracion_id}
-          placeholder="ID de configuración"
-          keyboardType="numeric"
+          name="configuracion"
+          label="Configuración *"
+          error={errors.configuracion}
+          placeholder="Selecciona una configuración"
+          options={configuracionOptions}
+          isLoading={isLoadingConfiguracion}
+          rules={{
+            required: 'Este campo es obligatorio',
+          }}
         />
 
-        <FormInputController
+        <FormSelectorController
           control={control}
-          name="linea_id"
-          label="ID Línea"
-          error={errors.linea_id}
-          placeholder="ID de línea"
-          keyboardType="numeric"
+          name="linea"
+          label="Línea *"
+          error={errors.linea}
+          placeholder="Selecciona una línea"
+          options={lineaOptions}
+          isLoading={isLoadingLinea}
+          rules={{
+            required: 'Este campo es obligatorio',
+          }}
         />
 
-        <FormInputController
+        <FormSelectorController
           control={control}
-          name="marca_id"
-          label="ID Marca"
-          error={errors.marca_id}
-          placeholder="ID de marca"
-          keyboardType="numeric"
+          name="marca"
+          label="Marca *"
+          error={errors.marca}
+          placeholder="Selecciona una marca"
+          options={marcaOptions}
+          isLoading={isLoadingMarca}
+          rules={{
+            required: 'Este campo es obligatorio',
+          }}
         />
       </View>
     </ScrollView>

@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { Control, FieldErrors, useWatch } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text, View, Switch } from 'react-native';
 import { Vehiculo } from '../../interfaces/vehiculo.interface';
+import { FormDatePickerController } from '@/src/shared/components/ui/form/FormDatePickerController';
 
 interface DocumentsInfoStepProps {
   control: Control<Partial<Vehiculo>>;
@@ -54,7 +55,7 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
       {/* Póliza Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Póliza de Seguro</Text>
-        
+
         <FormInputController
           control={control}
           name="poliza"
@@ -64,7 +65,7 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
           rules={{ required: 'Este campo es obligatorio' }}
         />
 
-        <FormDatePicker
+        <FormDatePickerController
           control={control}
           name="vence_poliza"
           label="Fecha de Vencimiento Póliza *"
@@ -78,7 +79,7 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
       {/* Tecnomecánica Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Revisión Tecnomecánica</Text>
-        
+
         <FormInputController
           control={control}
           name="tecnicomecanica"
@@ -88,7 +89,7 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
           rules={{ required: 'Este campo es obligatorio' }}
         />
 
-        <FormDatePicker
+        <FormDatePickerController
           control={control}
           name="vence_tecnicomecanica"
           label="Fecha de Vencimiento Tecnomecánica *"
@@ -102,12 +103,12 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
       {/* Verificación Section */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Estado de Verificación</Text>
-        
+
         <View style={styles.switchContainer}>
           <Text style={styles.switchLabel}>¿Vehículo verificado?</Text>
           <Switch
             value={watchedValues[4] || false}
-            onValueChange={(value) => {
+            onValueChange={value => {
               // This would be handled by the form controller
               // For now, we'll use a basic implementation
             }}
@@ -115,9 +116,10 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
             thumbColor={watchedValues[4] ? '#FFFFFF' : '#FFFFFF'}
           />
         </View>
-        
+
         <Text style={styles.helpText}>
-          Marca esta opción si el vehículo ha sido verificado y aprobado por las autoridades competentes.
+          Marca esta opción si el vehículo ha sido verificado y aprobado por las autoridades
+          competentes.
         </Text>
       </View>
     </ScrollView>

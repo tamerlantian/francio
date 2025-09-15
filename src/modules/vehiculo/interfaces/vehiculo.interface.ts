@@ -15,12 +15,12 @@ export interface Vehiculo {
   vence_tecnicomecanica: string;
   propio: boolean;
   remolque: boolean;
-  carroceria_id: number;
-  color_id: number;
-  combustible_id: number;
-  configuracion_id: number;
-  linea_id: number;
-  marca_id: number;
+  carroceria: number;
+  color: number;
+  combustible: number;
+  configuracion: number;
+  linea: number;
+  marca: number;
   verificado: boolean;
 }
 

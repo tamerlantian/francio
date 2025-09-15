@@ -1,7 +1,7 @@
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
 import React, { useEffect } from 'react';
 import { Control, FieldErrors, useWatch } from 'react-hook-form';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import { Vehiculo } from '../../interfaces/vehiculo.interface';
 
 interface BasicInfoStepProps {

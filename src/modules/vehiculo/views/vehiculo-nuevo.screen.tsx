@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { VehiculoWizard } from '../components/vehiculo-wizard';
 import { Vehiculo } from '../interfaces/vehiculo.interface';
 import { useCreateVehiculo } from '../view-models/vehiculo.view-model';
 import { router } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
 import { ConfirmationDialog } from '@/src/shared/components/ui/dialog/ConfirmationDialog';
+import { VehiculoWizard } from '../components/vehiculo-wizard';
 
 export default function VehiculoNuevoScreen() {
   const { mutateAsync: createVehiculo } = useCreateVehiculo();

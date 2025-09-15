@@ -2,8 +2,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
-import { BasicInfoStep } from './wizard-steps/basic-info-step';
 import { Vehiculo } from '../interfaces/vehiculo.interface';
+import { BasicInfoStep } from './wizard-steps/basic-info-step';
 import { TechnicalInfoStep } from './wizard-steps/technical-info-step';
 import { DocumentsInfoStep } from './wizard-steps/documents-info-step';
 
@@ -92,6 +92,9 @@ export const VehiculoWizard: React.FC<VehiculoWizardProps> = ({
         propio: data.propio || false,
         remolque: data.remolque || false,
       };
+
+      console.log('Processed Data:', processedData);
+
       onSubmit(processedData);
     })();
   };
@@ -215,9 +218,7 @@ export const VehiculoWizard: React.FC<VehiculoWizardProps> = ({
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>
-          {mode === 'create' ? 'Nuevo Vehículo' : 'Editar Vehículo'}
-        </Text>
+        <Text style={styles.title}>{mode === 'create' ? 'Nuevo Vehículo' : 'Editar Vehículo'}</Text>
         {renderProgressIndicator()}
         {renderStepIndicators()}
       </View>
