@@ -98,7 +98,6 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
         digito_verificacion: digitoVerificacion(Number(data.numero_identificacion)),
       };
 
-      console.log('dataWithShortName', dataWithShortName);
       onSubmit(dataWithShortName);
     })();
   };
