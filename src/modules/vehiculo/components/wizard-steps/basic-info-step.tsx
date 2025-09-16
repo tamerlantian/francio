@@ -78,7 +78,7 @@ export const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
       <FormInputController
         control={control}
         name="modelo_repotenciado"
-        label="Modelo Repotenciado"
+        label="Modelo repotenciado"
         error={errors.modelo_repotenciado}
         placeholder="Ingresa el modelo repotenciado (opcional)"
         isNumeric={true}

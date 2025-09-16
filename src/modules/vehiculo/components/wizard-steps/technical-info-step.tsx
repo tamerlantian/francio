@@ -107,7 +107,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
       <FormInputController
         control={control}
         name="ejes"
-        label="Número de Ejes *"
+        label="Número de ejes *"
         error={errors.ejes}
         placeholder="Ingresa el número de ejes"
         keyboardType="numeric"
@@ -122,7 +122,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
       <FormInputController
         control={control}
         name="peso_vacio"
-        label="Peso Vacío (kg) *"
+        label="Peso vacío (kg) *"
         error={errors.peso_vacio}
         placeholder="Ingresa el peso vacío en kilogramos"
         keyboardType="numeric"
@@ -137,7 +137,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
       <FormInputController
         control={control}
         name="capacidad"
-        label="Capacidad de Carga (kg) *"
+        label="Capacidad de carga (kg) *"
         error={errors.capacidad}
         placeholder="Ingresa la capacidad de carga en kilogramos"
         keyboardType="numeric"
@@ -150,7 +150,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
 
       {/* Switches Section */}
       <View style={styles.switchSection}>
-        <Text style={styles.sectionTitle}>Características del Vehículo</Text>
+        <Text style={styles.sectionTitle}>Características del vehículo</Text>
 
         {/* Propio Switch */}
         <View style={styles.switchContainer}>
@@ -191,7 +191,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
 
       {/* Vehicle Attributes Section */}
       <View style={styles.idsSection}>
-        <Text style={styles.sectionTitle}>Atributos del Vehículo</Text>
+        <Text style={styles.sectionTitle}>Atributos del vehículo</Text>
 
         <FormSelectorController
           control={control}

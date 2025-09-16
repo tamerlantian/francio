@@ -53,12 +53,12 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
 
       {/* Póliza Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Póliza de Seguro</Text>
+        <Text style={styles.sectionTitle}>Póliza de seguro</Text>
 
         <FormInputController
           control={control}
           name="poliza"
-          label="Número de Póliza *"
+          label="Número de póliza *"
           error={errors.poliza}
           placeholder="Ingresa el número de la póliza"
           rules={{ required: 'Este campo es obligatorio' }}
@@ -67,7 +67,7 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
         <FormDatePickerController
           control={control}
           name="vence_poliza"
-          label="Fecha de Vencimiento Póliza *"
+          label="Fecha de vencimiento póliza *"
           error={errors.vence_poliza}
           placeholder="Selecciona la fecha de vencimiento"
           rules={{ required: 'Este campo es obligatorio' }}
@@ -77,12 +77,12 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
 
       {/* Tecnomecánica Section */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Revisión Tecnomecánica</Text>
+        <Text style={styles.sectionTitle}>Revisión tecnomecánica</Text>
 
         <FormInputController
           control={control}
           name="tecnicomecanica"
-          label="Número de Tecnomecánica *"
+          label="Número de tecnomecánica *"
           error={errors.tecnicomecanica}
           placeholder="Ingresa el número de la tecnomecánica"
           rules={{ required: 'Este campo es obligatorio' }}
@@ -91,7 +91,7 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
         <FormDatePickerController
           control={control}
           name="vence_tecnicomecanica"
-          label="Fecha de Vencimiento Tecnomecánica *"
+          label="Fecha de vencimiento tecnomecánica *"
           error={errors.vence_tecnicomecanica}
           placeholder="Selecciona la fecha de vencimiento"
           rules={{ required: 'Este campo es obligatorio' }}

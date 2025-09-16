@@ -17,8 +17,8 @@ interface VehiculoWizardProps {
 }
 
 const STEPS = [
-  { id: 1, title: 'Información Básica', icon: 'car-outline' },
-  { id: 2, title: 'Información Técnica', icon: 'settings-outline' },
+  { id: 1, title: 'Información básica', icon: 'car-outline' },
+  { id: 2, title: 'Información técnica', icon: 'settings-outline' },
   { id: 3, title: 'Documentos', icon: 'document-text-outline' },
 ];
 
@@ -217,7 +217,7 @@ export const VehiculoWizard: React.FC<VehiculoWizardProps> = ({
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>{mode === 'create' ? 'Nuevo Vehículo' : 'Editar Vehículo'}</Text>
+        <Text style={styles.title}>{mode === 'create' ? 'Nuevo vehículo' : 'Editar vehículo'}</Text>
         {renderProgressIndicator()}
         {renderStepIndicators()}
       </View>
