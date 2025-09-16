@@ -106,10 +106,11 @@ export const useUpdateConductor = () => {
  * Hook para obtener la lista de conductores para el selector
  */
 export const useConductoresSelector = () => {
+  const { data: user } = useCurrentUser();
   // Query para obtener la lista de conductores para el selector
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: conductorKeys.selector(),
-    queryFn: () => conductorController.getConductoresSelector(),
+    queryFn: () => conductorController.getConductoresSelector({ usuario_id: user?.id }),
   });
 
   // Transformar los datos al formato esperado por el selector

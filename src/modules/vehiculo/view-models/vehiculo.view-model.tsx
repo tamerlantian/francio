@@ -106,10 +106,11 @@ export const useUpdateVehiculo = () => {
  * Hook para obtener la lista de vehículos para el selector
  */
 export const useVehiculosSelector = () => {
+  const { data: user } = useCurrentUser();
   // Query para obtener la lista de vehículos para el selector
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: vehiculoKeys.selector(),
-    queryFn: () => vehiculoController.getVehiculosSelector(),
+    queryFn: () => vehiculoController.getVehiculosSelector({ usuario_id: user?.id }),
   });
 
   // Transformar los datos al formato esperado por el selector

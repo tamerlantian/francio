@@ -20,6 +20,7 @@ export const vehiculoController = {
       const response = await VehiculoRepository.getInstance().getVehiculosSelector(params);
       return response;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   },

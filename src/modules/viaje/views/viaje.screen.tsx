@@ -29,8 +29,9 @@ export default function ViajeScreen() {
     conductoresOptions,
     isLoading: isLoadingConductores,
     isError: isErrorConductores,
+    refetch: refetchConductores,
   } = useConductoresSelector();
-  const { vehiculosOptions } = useVehiculosSelector();
+  const { vehiculosOptions, refetch: refetchVehiculos } = useVehiculosSelector();
   // Usar el hook para aceptar viajes
   const { aceptarViaje, isLoading: isLoadingAceptar } = useAceptarViaje();
 
@@ -61,6 +62,8 @@ export default function ViajeScreen() {
   // Función para manejar el pull-to-refresh
   const handleRefresh = () => {
     refetchViajes();
+    refetchVehiculos();
+    refetchConductores();
   };
 
   // Manejar la aceptación del viaje

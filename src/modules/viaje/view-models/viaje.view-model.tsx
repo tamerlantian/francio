@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { viajeController } from '../controllers/viaje.controller';
 import { useToast } from '@/src/shared/hooks/use-toast.hook';
 import { ApiErrorResponse } from '@/src/core/interfaces/api.interface';
+import { useCurrentUser } from '../../auth/view-models/auth.view-model';
 
 export const viajeKeys = {
   all: ['viajes'] as const,
@@ -10,11 +11,17 @@ export const viajeKeys = {
 };
 
 export const useViaje = () => {
+  const { data: user } = useCurrentUser();
+
   // Query para obtener la lista de viajes
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: viajeKeys.list(),
     queryFn: () =>
-      viajeController.getViajes({ estado_aceptado: 'False', solicitud_transporte: 'True' }),
+      viajeController.getViajes({
+        estado_aceptado: 'False',
+        solicitud_transporte: 'True',
+        usuario_id: user?.id,
+      }),
   });
 
   return {
