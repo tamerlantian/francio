@@ -7,6 +7,7 @@ import { Vehiculo } from '../interfaces/vehiculo.interface';
 import { BasicInfoStep } from './wizard-steps/basic-info-step';
 import { TechnicalInfoStep } from './wizard-steps/technical-info-step';
 import { DocumentsInfoStep } from './wizard-steps/documents-info-step';
+import { useCurrentUser } from '../../auth/view-models/auth.view-model';
 
 interface VehiculoWizardProps {
   initialData?: Partial<Vehiculo>;
@@ -33,6 +34,7 @@ export const VehiculoWizard: React.FC<VehiculoWizardProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [stepValidation, setStepValidation] = useState<Record<number, boolean>>({});
+  const { data: user } = useCurrentUser();
 
   // Centralized form management
   const {
@@ -91,9 +93,8 @@ export const VehiculoWizard: React.FC<VehiculoWizardProps> = ({
         ...data,
         propio: data.propio || false,
         remolque: data.remolque || false,
+        usuario: user?.id,
       };
-
-      console.log('Processed Data:', processedData);
 
       onSubmit(processedData);
     })();

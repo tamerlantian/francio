@@ -4,6 +4,7 @@ import { Vehiculo } from '../interfaces/vehiculo.interface';
 import { useToast } from '@/src/shared/hooks/use-toast.hook';
 import { ApiErrorResponse } from '@/src/core/interfaces/api.interface';
 import { mapVehiculoResponseVehiculo } from '../utils/vehiculo-mapper.util';
+import { useCurrentUser } from '../../auth/view-models/auth.view-model';
 
 export const vehiculoKeys = {
   all: ['vehiculos'] as const,
@@ -13,10 +14,12 @@ export const vehiculoKeys = {
 };
 
 export const useVehiculo = () => {
+  const { data: user } = useCurrentUser();
+
   // Query para obtener la lista de vehículos
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: vehiculoKeys.list(),
-    queryFn: () => vehiculoController.getVehiculos(),
+    queryFn: () => vehiculoController.getVehiculos({ usuario_id: user?.id }),
   });
 
   return {
@@ -39,8 +42,6 @@ export const useVehiculoById = (id: string) => {
     },
     enabled: !!id,
   });
-
-  console.log(data);
 
   return {
     vehiculo: data,

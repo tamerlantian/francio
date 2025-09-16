@@ -4,6 +4,7 @@ import { Conductor } from '../interfaces/conductor.interface';
 import { useToast } from '@/src/shared/hooks/use-toast.hook';
 import { ApiErrorResponse } from '@/src/core/interfaces/api.interface';
 import { mapConductorResponseToConductor } from '../utils/conductor-mapper.util';
+import { useCurrentUser } from '../../auth/view-models/auth.view-model';
 
 export const conductorKeys = {
   all: ['conductores'] as const,
@@ -13,10 +14,11 @@ export const conductorKeys = {
 };
 
 export const useConductor = () => {
+  const { data: user } = useCurrentUser();
   // Query para obtener la lista de conductores
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: conductorKeys.list(),
-    queryFn: () => conductorController.getConductores(),
+    queryFn: () => conductorController.getConductores({ usuario_id: user?.id }),
   });
 
   return {

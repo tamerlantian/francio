@@ -10,6 +10,7 @@ export const conductorController = {
       const response = await ConductorRepository.getInstance().getConductores(params);
       return response;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   },
