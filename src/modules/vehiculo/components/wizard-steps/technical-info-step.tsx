@@ -9,7 +9,7 @@ import {
   useSeleccionarMarca,
 } from '@/src/modules/vertical/hooks/use-vertical.hook';
 import React, { useEffect } from 'react';
-import { Control, FieldErrors, useWatch } from 'react-hook-form';
+import { Control, Controller, FieldErrors, useWatch } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text, View, Switch } from 'react-native';
 import { Vehiculo } from '../../interfaces/vehiculo.interface';
 
@@ -38,6 +38,8 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
       'ejes',
       'peso_vacio',
       'capacidad',
+      'propio',
+      'remolque',
       'carroceria',
       'color',
       'combustible',
@@ -65,11 +67,17 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
     const hasErrors = technicalInfoFields.some(field => errors[field as keyof Partial<Vehiculo>]);
 
     // Check if required fields have values
-    const hasRequiredValues = technicalInfoFields.every((_, index) => {
+    const hasRequiredValues = technicalInfoFields.every((field, index) => {
       const value = watchedValues[index];
+      // Skip validation for boolean fields (propio, remolque) as they're not in technicalInfoFields
+      if (typeof value === 'boolean') {
+        return true;
+      }
+      // For numeric fields
       if (typeof value === 'number') {
         return value !== undefined && value !== null;
       }
+      // For string fields
       return value !== undefined && value !== null && value !== '';
     });
 
@@ -143,28 +151,36 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
         {/* Propio Switch */}
         <View style={styles.switchContainer}>
           <Text style={styles.switchLabel}>¿Es vehículo propio?</Text>
-          <Switch
-            value={watchedValues[3] || false}
-            onValueChange={value => {
-              // This would be handled by the form controller
-              // For now, we'll use a basic implementation
-            }}
-            trackColor={{ false: '#E5E5E5', true: '#0066CC' }}
-            thumbColor={watchedValues[3] ? '#FFFFFF' : '#FFFFFF'}
+          <Controller
+            control={control}
+            name="propio"
+            render={({ field }) => (
+              <Switch
+                value={field.value || false}
+                onValueChange={field.onChange}
+                trackColor={{ false: '#E5E7EB', true: '#10B981' }}
+                thumbColor={field.value ? '#FFFFFF' : '#9CA3AF'}
+                ios_backgroundColor="#E5E7EB"
+              />
+            )}
           />
         </View>
 
         {/* Remolque Switch */}
         <View style={styles.switchContainer}>
           <Text style={styles.switchLabel}>¿Tiene remolque?</Text>
-          <Switch
-            value={watchedValues[4] || false}
-            onValueChange={value => {
-              // This would be handled by the form controller
-              // For now, we'll use a basic implementation
-            }}
-            trackColor={{ false: '#E5E5E5', true: '#0066CC' }}
-            thumbColor={watchedValues[4] ? '#FFFFFF' : '#FFFFFF'}
+          <Controller
+            control={control}
+            name="remolque"
+            render={({ field }) => (
+              <Switch
+                value={field.value || false}
+                onValueChange={field.onChange}
+                trackColor={{ false: '#E5E7EB', true: '#10B981' }}
+                thumbColor={field.value ? '#FFFFFF' : '#9CA3AF'}
+                ios_backgroundColor="#E5E7EB"
+              />
+            )}
           />
         </View>
       </View>
