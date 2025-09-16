@@ -64,7 +64,7 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
       <FormSelectorController
         control={control}
         name="identificacion"
-        label="Tipo de Identificación *"
+        label="Tipo de identificación *"
         placeholder="Selecciona el tipo de identificación"
         options={identificacionOptions}
         error={errors.identificacion}
@@ -79,7 +79,7 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
       <FormInputController
         control={control}
         name="numero_identificacion"
-        label="Número de Identificación *"
+        label="Número de identificación *"
         error={errors.numero_identificacion}
         placeholder="Ingresa el número de identificación"
         keyboardType="numeric"
@@ -91,7 +91,7 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
       <FormInputController
         control={control}
         name="nombre1"
-        label="Primer Nombre *"
+        label="Primer nombre *"
         error={errors.nombre1}
         placeholder="Ingresa el primer nombre"
         autoCapitalize="words"
@@ -102,7 +102,7 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
       <FormInputController
         control={control}
         name="nombre2"
-        label="Segundo Nombre"
+        label="Segundo nombre"
         error={errors.nombre2}
         placeholder="Ingresa el segundo nombre (opcional)"
         autoCapitalize="words"
@@ -112,7 +112,7 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
       <FormInputController
         control={control}
         name="apellido1"
-        label="Primer Apellido *"
+        label="Primer apellido *"
         error={errors.apellido1}
         placeholder="Ingresa el primer apellido"
         autoCapitalize="words"
@@ -123,7 +123,7 @@ export const PersonalInfoStep: React.FC<PersonalInfoStepProps> = ({
       <FormInputController
         control={control}
         name="apellido2"
-        label="Segundo Apellido"
+        label="Segundo apellido"
         error={errors.apellido2}
         placeholder="Ingresa el segundo apellido (opcional)"
         autoCapitalize="words"

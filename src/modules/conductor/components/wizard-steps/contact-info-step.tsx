@@ -56,7 +56,7 @@ export const ContactInfoStep: React.FC<ContactInfoStepProps> = ({
       <FormInputController
         control={control}
         name="correo"
-        label="Correo Electrónico *"
+        label="Correo electrónico *"
         error={errors.correo}
         placeholder="ejemplo@correo.com"
         keyboardType="email-address"

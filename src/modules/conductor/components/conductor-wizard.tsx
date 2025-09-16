@@ -20,7 +20,7 @@ interface ConductorWizardProps {
 }
 
 const STEPS = [
-  { id: 1, title: 'Información Personal', icon: 'person-outline' },
+  { id: 1, title: 'Información personal', icon: 'person-outline' },
   { id: 2, title: 'Contacto', icon: 'call-outline' },
   { id: 3, title: 'Licencia', icon: 'card-outline' },
   // { id: 4, title: 'Configuración', icon: 'settings-outline' },
@@ -232,7 +232,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>
-          {mode === 'create' ? 'Nuevo Conductor' : 'Editar Conductor'}
+          {mode === 'create' ? 'Nuevo conductor' : 'Editar conductor'}
         </Text>
         {renderProgressIndicator()}
         {renderStepIndicators()}

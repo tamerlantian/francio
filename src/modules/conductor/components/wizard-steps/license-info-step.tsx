@@ -79,7 +79,7 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
       <FormInputController
         control={control}
         name="numero_licencia"
-        label="Número de Licencia *"
+        label="Número de licencia *"
         error={errors.numero_licencia}
         placeholder="Ej: 12345678"
         keyboardType="numeric"
@@ -96,7 +96,7 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
       <FormSelectorController
         control={control}
         name="categoria_licencia"
-        label="Categoría de Licencia *"
+        label="Categoría de licencia *"
         placeholder="Selecciona la categoría de licencia"
         options={categoriaLicenciaOptions}
         error={errors.categoria_licencia}
@@ -110,7 +110,7 @@ export const LicenseInfoStep: React.FC<LicenseInfoStepProps> = ({
       <FormDatePickerController
         control={control}
         name="fecha_vence_licencia"
-        label="Fecha de Vencimiento *"
+        label="Fecha de vencimiento *"
         placeholder="Seleccionar fecha de vencimiento"
         error={errors.fecha_vence_licencia}
         rules={{
