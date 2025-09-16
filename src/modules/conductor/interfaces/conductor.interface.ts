@@ -9,11 +9,11 @@ export interface Conductor {
   numero_identificacion: string;
   nombre_corto: string;
   nombre1: string;
-  nombre2: string;
+  nombre2: string | null;
   apellido1: string;
-  apellido2: string;
+  apellido2: string | null;
   direccion: string;
-  barrio: string;
+  barrio: string | null;
   telefono: string;
   correo: string;
   numero_licencia: string;
