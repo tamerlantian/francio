@@ -1,15 +1,16 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
-import { useForm } from 'react-hook-form';
-import { PersonalInfoStep } from './wizard-steps/personal-info-step';
-import { Conductor } from '../interfaces/conductor.interface';
-import { ContactInfoStep } from './wizard-steps/contact-info-step';
-import { LicenseInfoStep } from './wizard-steps/license-info-step';
-import { ConfigurationStep } from './wizard-steps/configuration-step';
+import { useCurrentUser } from '@/src/modules/auth/view-models/auth.view-model';
 import { digitoVerificacion } from '@/src/shared/utils/digito-verificacion.util';
 import { cambiarANull } from '@/src/shared/utils/form.util';
+import { Ionicons } from '@expo/vector-icons';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Conductor } from '../interfaces/conductor.interface';
+import { ConfigurationStep } from './wizard-steps/configuration-step';
+import { ContactInfoStep } from './wizard-steps/contact-info-step';
+import { LicenseInfoStep } from './wizard-steps/license-info-step';
+import { PersonalInfoStep } from './wizard-steps/personal-info-step';
 
 interface ConductorWizardProps {
   initialData?: Partial<Conductor>;
@@ -37,6 +38,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [stepValidation, setStepValidation] = useState<Record<number, boolean>>({});
+  const { data: user } = useCurrentUser();
 
   // Centralized form management
   const {
@@ -104,6 +106,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
         barrio,
         nombre_corto: `${nombre1} ${apellido1}`.trim(),
         digito_verificacion: digitoVerificacion(Number(data.numero_identificacion)),
+        usuario: user?.id,
       };
       onSubmit(dataWithShortName);
     })();
