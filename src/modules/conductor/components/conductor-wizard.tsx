@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
 import { PersonalInfoStep } from './wizard-steps/personal-info-step';
@@ -228,7 +229,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['bottom']}>
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.title}>
@@ -246,7 +247,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
 
       {/* Botones de navegación */}
       {renderNavigationButtons()}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -336,6 +337,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderTopWidth: 1,
     borderTopColor: '#E5E5E5',
+    paddingBottom: Platform.OS === 'android' ? 25 : 20,
   },
   buttonRow: {
     flexDirection: 'row',
