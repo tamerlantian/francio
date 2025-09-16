@@ -1,10 +1,9 @@
+import { FormDatePickerController } from '@/src/shared/components/ui/form/FormDatePickerController';
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
-import { FormDatePicker } from '@/src/shared/components/ui/form/FormDatePicker';
 import React, { useEffect } from 'react';
 import { Control, FieldErrors, useWatch } from 'react-hook-form';
-import { ScrollView, StyleSheet, Text, View, Switch } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Vehiculo } from '../../interfaces/vehiculo.interface';
-import { FormDatePickerController } from '@/src/shared/components/ui/form/FormDatePickerController';
 
 interface DocumentsInfoStepProps {
   control: Control<Partial<Vehiculo>>;
@@ -20,7 +19,7 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
   // Watch form values for validation
   const watchedValues = useWatch({
     control,
-    name: ['poliza', 'vence_poliza', 'tecnicomecanica', 'vence_tecnicomecanica', 'verificado'],
+    name: ['poliza', 'vence_poliza', 'tecnicomecanica', 'vence_tecnicomecanica'],
   });
 
   // Notify parent of validation changes based on form errors and required values
@@ -101,7 +100,7 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
       </View>
 
       {/* Verificación Section */}
-      <View style={styles.section}>
+      {/* <View style={styles.section}>
         <Text style={styles.sectionTitle}>Estado de Verificación</Text>
 
         <View style={styles.switchContainer}>
@@ -121,7 +120,7 @@ export const DocumentsInfoStep: React.FC<DocumentsInfoStepProps> = ({
           Marca esta opción si el vehículo ha sido verificado y aprobado por las autoridades
           competentes.
         </Text>
-      </View>
+      </View> */}
     </ScrollView>
   );
 };

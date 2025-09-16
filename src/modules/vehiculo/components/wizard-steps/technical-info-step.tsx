@@ -51,28 +51,26 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
 
   // Notify parent of validation changes based on form errors and required values
   useEffect(() => {
-    const technicalInfoFields = [
-      'ejes',
-      'peso_vacio',
-      'capacidad',
-      'carroceria',
-      'color',
-      'combustible',
-      'configuracion',
-      'linea',
-      'marca',
-    ];
+    // Define required fields
+    const requiredFields = {
+      ejes: watchedValues[0],
+      peso_vacio: watchedValues[1],
+      capacidad: watchedValues[2],
+      carroceria: watchedValues[5],
+      color: watchedValues[6],
+      combustible: watchedValues[7],
+      configuracion: watchedValues[8],
+      linea: watchedValues[9],
+      marca: watchedValues[10],
+    };
 
-    // Check for errors
-    const hasErrors = technicalInfoFields.some(field => errors[field as keyof Partial<Vehiculo>]);
+    // Check for errors in any required field
+    const hasErrors = Object.keys(requiredFields).some(
+      field => errors[field as keyof Partial<Vehiculo>],
+    );
 
-    // Check if required fields have values
-    const hasRequiredValues = technicalInfoFields.every((field, index) => {
-      const value = watchedValues[index];
-      // Skip validation for boolean fields (propio, remolque) as they're not in technicalInfoFields
-      if (typeof value === 'boolean') {
-        return true;
-      }
+    // Check if all required fields have values
+    const hasRequiredValues = Object.entries(requiredFields).every(([_field, value]) => {
       // For numeric fields
       if (typeof value === 'number') {
         return value !== undefined && value !== null;
@@ -80,6 +78,9 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
       // For string fields
       return value !== undefined && value !== null && value !== '';
     });
+
+    console.log('Field values:', requiredFields);
+    console.log('Has all required values:', hasRequiredValues);
 
     const isValid = !hasErrors && hasRequiredValues;
     onValidationChange(isValid);
@@ -110,6 +111,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
         error={errors.ejes}
         placeholder="Ingresa el número de ejes"
         keyboardType="numeric"
+        isNumeric={true}
         rules={{
           required: 'Este campo es obligatorio',
           min: { value: 1, message: 'Debe tener al menos 1 eje' },
@@ -124,6 +126,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
         error={errors.peso_vacio}
         placeholder="Ingresa el peso vacío en kilogramos"
         keyboardType="numeric"
+        isNumeric={true}
         rules={{
           required: 'Este campo es obligatorio',
           min: { value: 1, message: 'El peso debe ser mayor a 0' },
@@ -138,6 +141,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
         error={errors.capacidad}
         placeholder="Ingresa la capacidad de carga en kilogramos"
         keyboardType="numeric"
+        isNumeric={true}
         rules={{
           required: 'Este campo es obligatorio',
           min: { value: 1, message: 'La capacidad debe ser mayor a 0' },

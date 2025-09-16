@@ -3,6 +3,7 @@ import { vehiculoController } from '../controllers/vehiculo.controller';
 import { Vehiculo } from '../interfaces/vehiculo.interface';
 import { useToast } from '@/src/shared/hooks/use-toast.hook';
 import { ApiErrorResponse } from '@/src/core/interfaces/api.interface';
+import { mapVehiculoResponseVehiculo } from '../utils/vehiculo-mapper.util';
 
 export const vehiculoKeys = {
   all: ['vehiculos'] as const,
@@ -34,10 +35,12 @@ export const useVehiculoById = (id: string) => {
     queryKey: vehiculoKeys.detail(id),
     queryFn: async () => {
       const response = await vehiculoController.getVehiculoById(id);
-      return response;
+      return mapVehiculoResponseVehiculo(response);
     },
     enabled: !!id,
   });
+
+  console.log(data);
 
   return {
     vehiculo: data,

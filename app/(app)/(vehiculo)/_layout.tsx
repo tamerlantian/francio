@@ -5,6 +5,7 @@ export default function VehiculoLayout() {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="nuevo" options={{ headerShown: false }} />
+      <Stack.Screen name="editar/[id]" options={{ headerShown: false }} />
     </Stack>
   );
 }

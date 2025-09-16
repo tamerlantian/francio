@@ -88,7 +88,6 @@ export const VehiculoWizard: React.FC<VehiculoWizardProps> = ({
       // Set default values for required fields
       const processedData = {
         ...data,
-        verificado: data.verificado || false,
         propio: data.propio || false,
         remolque: data.remolque || false,
       };

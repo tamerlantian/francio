@@ -69,7 +69,8 @@ export const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
         label="Modelo *"
         error={errors.modelo}
         placeholder="Ingresa el modelo del vehículo"
-        autoCapitalize="words"
+        keyboardType="numeric"
+        isNumeric={true}
         rules={{ required: 'Este campo es obligatorio' }}
       />
 
@@ -80,7 +81,7 @@ export const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
         label="Modelo Repotenciado"
         error={errors.modelo_repotenciado}
         placeholder="Ingresa el modelo repotenciado (opcional)"
-        autoCapitalize="words"
+        isNumeric={true}
       />
 
       {/* Motor */}
@@ -90,6 +91,7 @@ export const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
         label="Motor *"
         error={errors.motor}
         placeholder="Ingresa el número del motor"
+        autoCapitalize="characters"
         rules={{ required: 'Este campo es obligatorio' }}
       />
 
@@ -100,6 +102,7 @@ export const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
         label="Chasis *"
         error={errors.chasis}
         placeholder="Ingresa el número del chasis"
+        autoCapitalize="characters"
         rules={{ required: 'Este campo es obligatorio' }}
       />
     </ScrollView>

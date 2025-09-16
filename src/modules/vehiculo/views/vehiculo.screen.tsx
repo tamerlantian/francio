@@ -21,7 +21,7 @@ export default function VehiculoScreen() {
 
   // Función para navegar a la pantalla de edición
   const handleOpenEdit = (vehiculo: VehiculoResponse) => {
-    // router.push(`/(app)/(vehiculo)/editar/${vehiculo.id}`);
+    router.push(`/(app)/(vehiculo)/editar/${vehiculo.id}`);
   };
 
   // Si está cargando, mostramos un indicador

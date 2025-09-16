@@ -10,6 +10,7 @@ interface FormInputControllerProps<T extends FieldValues>
   label: string;
   error?: FieldError;
   rules?: Record<string, any>;
+  isNumeric?: boolean;
 }
 
 export const FormInputController = <T extends FieldValues>({
@@ -18,6 +19,7 @@ export const FormInputController = <T extends FieldValues>({
   label,
   error,
   rules,
+  isNumeric = false,
   ...props
 }: FormInputControllerProps<T>) => {
   return (
@@ -31,9 +33,15 @@ export const FormInputController = <T extends FieldValues>({
           <TextInput
             style={[loginStyles.input, error ? loginStyles.inputError : null]}
             placeholderTextColor="#999"
-            onChangeText={onChange}
+            onChangeText={text => {
+              if (isNumeric) {
+                onChange(text ? parseInt(text) : '');
+              } else {
+                onChange(text);
+              }
+            }}
             onBlur={onBlur}
-            value={value}
+            value={isNumeric ? (value ? value.toString() : '') : value || ''}
             {...props}
           />
           {error ? <Text style={loginStyles.errorText}>{error.message}</Text> : null}
