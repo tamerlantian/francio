@@ -104,7 +104,7 @@ export const LoginScreen = () => {
               marginBottom: 30,
             }}
           >
-            <Text style={loginStyles.title}>Iniciar Sesión</Text>
+            <Text style={loginStyles.title}>Iniciar sesión</Text>
           </View>
 
           {/* Campo de email */}

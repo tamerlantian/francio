@@ -101,7 +101,7 @@ export const RegisterScreen = () => {
             />
           </View>
 
-          <Text style={loginStyles.title}>Crear Cuenta</Text>
+          <Text style={loginStyles.title}>Crear cuenta</Text>
 
           {/* Campo de email */}
           <FormInputController<RegisterFormValues>
@@ -199,7 +199,7 @@ export const RegisterScreen = () => {
                 router.push('/(auth)/login');
               }}
             >
-              <Text style={loginStyles.footerLink}>Iniciar Sesión</Text>
+              <Text style={loginStyles.footerLink}>Iniciar sesión</Text>
             </TouchableOpacity>
           </View>
 
@@ -228,7 +228,6 @@ export const RegisterScreen = () => {
           <DevModeSelector onClose={handleCloseDevModeSheet} />
         </CustomBottomSheet>
       </View>
-      P
     </SafeAreaView>
   );
 };

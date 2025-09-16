@@ -58,7 +58,7 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
     return (
       <CustomBottomSheet ref={ref} initialSnapPoints={['30%', '50%']} onDismiss={onCloseSheet}>
         <View style={styles.bottomSheetContent}>
-          <Text style={styles.bottomSheetTitle}>Asignar Viaje</Text>
+          <Text style={styles.bottomSheetTitle}>Asignar viaje</Text>
           <View style={styles.bottomSheetSubtitleContainer}>
             <Text style={styles.bottomSheetSubtitle}>
               {viaje?.datos?.ciudad_origen__nombre || 'Cargando...'}
@@ -95,7 +95,7 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
             onPress={handleSubmit(onSubmit)}
             isLoading={isLoading}
             disabled={!isValid}
-            title="Aceptar Viaje"
+            title="Aceptar viaje"
           />
         </View>
       </CustomBottomSheet>

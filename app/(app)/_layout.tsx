@@ -29,7 +29,7 @@ function CustomDrawerContent(props: any) {
           onPress={handleLogout}
         >
           <Ionicons name="exit-outline" size={24} color="#1890ff" />
-          <Text style={{ color: '#1890ff', fontSize: 14 }}>Cerrar Sesión</Text>
+          <Text style={{ color: '#1890ff', fontSize: 14 }}>Cerrar sesión</Text>
         </TouchableOpacity>
       </View>
     </View>

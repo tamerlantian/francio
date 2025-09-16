@@ -21,10 +21,10 @@ export const DevModeSelector: React.FC<DevModeSelectorProps> = ({ onClose }) => 
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Modo Desarrollador</Text>
+      <Text style={styles.title}>Modo desarrollador</Text>
 
       <View style={styles.infoContainer}>
-        <Text style={styles.subtitle}>Estado Actual:</Text>
+        <Text style={styles.subtitle}>Estado actual:</Text>
         <Text style={[styles.status, isDeveloperMode ? styles.devMode : styles.prodMode]}>
           {isDeveloperMode ? 'ACTIVADO' : 'DESACTIVADO'}
         </Text>
@@ -40,7 +40,7 @@ export const DevModeSelector: React.FC<DevModeSelectorProps> = ({ onClose }) => 
         onPress={handleToggle}
       >
         <Text style={styles.buttonText}>
-          {isDeveloperMode ? 'Desactivar Modo Desarrollador' : 'Activar Modo Desarrollador'}
+          {isDeveloperMode ? 'Desactivar modo desarrollador' : 'Activar modo desarrollador'}
         </Text>
       </TouchableOpacity>
 
