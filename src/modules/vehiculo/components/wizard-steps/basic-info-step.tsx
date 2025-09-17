@@ -2,11 +2,11 @@ import { FormInputController } from '@/src/shared/components/ui/form/FormInputCo
 import React, { useEffect } from 'react';
 import { Control, FieldErrors, useWatch } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text } from 'react-native';
-import { Vehiculo } from '../../interfaces/vehiculo.interface';
+import { VehiculoResponse } from '../../interfaces/vehiculo.interface';
 
 interface BasicInfoStepProps {
-  control: Control<Partial<Vehiculo>>;
-  errors: FieldErrors<Partial<Vehiculo>>;
+  control: Control<Partial<VehiculoResponse>>;
+  errors: FieldErrors<Partial<VehiculoResponse>>;
   onValidationChange: (_isValid: boolean) => void;
 }
 
@@ -26,7 +26,9 @@ export const BasicInfoStep: React.FC<BasicInfoStepProps> = ({
     const basicInfoFields = ['placa', 'modelo', 'motor', 'chasis'];
 
     // Check for errors
-    const hasErrors = basicInfoFields.some(field => errors[field as keyof Partial<Vehiculo>]);
+    const hasErrors = basicInfoFields.some(
+      field => errors[field as keyof Partial<VehiculoResponse>],
+    );
 
     // Check if required fields have values
     const hasRequiredValues = basicInfoFields.every((field, index) => {

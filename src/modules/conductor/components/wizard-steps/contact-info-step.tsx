@@ -1,7 +1,6 @@
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
 import { FormSearchableSelectorController } from '@/src/shared/components/ui/form/FormSearchableSelectorController';
 import { useSearchableSelector } from '@/src/shared/hooks/use-searchable-selector.hook';
-import { COMMON_FIELD_MAPPINGS } from '@/src/shared/interfaces/searchable-selector.interface';
 import React, { useEffect } from 'react';
 import { Control, FieldErrors, useWatch } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text } from 'react-native';
@@ -23,7 +22,8 @@ export const ContactInfoStep: React.FC<ContactInfoStepProps> = ({
   // Ciudad searchable selector
   const ciudadSelector = useSearchableSelector({
     endpoint: 'vertical/ciudad/seleccionar/',
-    ...COMMON_FIELD_MAPPINGS.LOCATION,
+    labelField: 'nombre',
+    valueField: 'id',
     searchParam: 'nombre__icontains',
     initialParams: { nombre__icontains: initialData?.ciudad__nombre },
     minSearchLength: 1,

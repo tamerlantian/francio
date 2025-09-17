@@ -1,36 +1,98 @@
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
-import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
-import {
-  useSeleccionarCarroceria,
-  useSeleccionarColor,
-  useSeleccionarCombustible,
-  useSeleccionarConfiguracion,
-  useSeleccionarLinea,
-  useSeleccionarMarca,
-} from '@/src/modules/vertical/hooks/use-vertical.hook';
 import React, { useEffect } from 'react';
 import { Control, Controller, FieldErrors, useWatch } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text, View, Switch } from 'react-native';
-import { Vehiculo } from '../../interfaces/vehiculo.interface';
+import { VehiculoResponse } from '../../interfaces/vehiculo.interface';
+import { useSearchableSelector } from '@/src/shared/hooks/use-searchable-selector.hook';
+import { FormSearchableSelectorController } from '@/src/shared/components/ui/form/FormSearchableSelectorController';
 
 interface TechnicalInfoStepProps {
-  control: Control<Partial<Vehiculo>>;
-  errors: FieldErrors<Partial<Vehiculo>>;
+  control: Control<Partial<VehiculoResponse>>;
+  errors: FieldErrors<Partial<VehiculoResponse>>;
+  initialData?: Partial<VehiculoResponse>;
   onValidationChange: (_isValid: boolean) => void;
 }
 
 export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
   control,
   errors,
+  initialData,
   onValidationChange,
 }) => {
-  // Load selector options
-  const { carroceriaOptions, isLoading: isLoadingCarroceria } = useSeleccionarCarroceria();
-  const { colorOptions, isLoading: isLoadingColor } = useSeleccionarColor();
-  const { combustibleOptions, isLoading: isLoadingCombustible } = useSeleccionarCombustible();
-  const { configuracionOptions, isLoading: isLoadingConfiguracion } = useSeleccionarConfiguracion();
-  const { lineaOptions, isLoading: isLoadingLinea } = useSeleccionarLinea();
-  const { marcaOptions, isLoading: isLoadingMarca } = useSeleccionarMarca();
+  console.log('initialData', initialData);
+  const carroceriaSelector = useSearchableSelector({
+    endpoint: 'vertical/carroceria/seleccionar/',
+    labelField: 'nombre',
+    valueField: 'id',
+    searchParam: 'nombre__icontains',
+    initialParams: {
+      nombre__icontains: initialData?.carroceria__nombre ? initialData.carroceria__nombre : '',
+    },
+    minSearchLength: 1,
+    searchDebounceMs: 300,
+  });
+
+  // Searchable selectors
+  // Usando un patrón común para todos los selectores con nombre
+  const colorSelector = useSearchableSelector({
+    endpoint: 'vertical/color/seleccionar/',
+    labelField: 'nombre',
+    valueField: 'id',
+    searchParam: 'nombre__icontains',
+    initialParams: initialData?.color__nombre
+      ? { nombre__icontains: initialData.color__nombre }
+      : undefined,
+    minSearchLength: 1,
+    searchDebounceMs: 300,
+  });
+
+  const combustibleSelector = useSearchableSelector({
+    endpoint: 'vertical/combustible/seleccionar/',
+    labelField: 'nombre',
+    valueField: 'id',
+    searchParam: 'nombre__icontains',
+    initialParams: initialData?.combustible__nombre
+      ? { nombre__icontains: initialData.combustible__nombre }
+      : undefined,
+    minSearchLength: 1,
+    searchDebounceMs: 300,
+  });
+
+  const configuracionSelector = useSearchableSelector({
+    endpoint: 'vertical/vehiculo_configuracion/seleccionar/',
+    labelField: 'nombre',
+    valueField: 'id',
+    searchParam: 'nombre__icontains',
+    initialParams: initialData?.configuracion__nombre
+      ? { nombre__icontains: initialData.configuracion__nombre }
+      : undefined,
+    minSearchLength: 1,
+    searchDebounceMs: 300,
+  });
+
+  const lineaSelector = useSearchableSelector({
+    endpoint: 'vertical/linea/seleccionar/',
+    labelField: 'nombre',
+    valueField: 'id',
+    searchParam: 'nombre__icontains',
+    initialParams: initialData?.linea__nombre
+      ? { nombre__icontains: initialData.linea__nombre }
+      : undefined,
+    minSearchLength: 1,
+    searchDebounceMs: 300,
+  });
+
+  const marcaSelector = useSearchableSelector({
+    endpoint: 'vertical/marca/seleccionar/',
+    labelField: 'nombre',
+    valueField: 'id',
+    searchParam: 'nombre__icontains',
+    initialParams: initialData?.marca__nombre
+      ? { nombre__icontains: initialData.marca__nombre }
+      : undefined,
+    minSearchLength: 1,
+    searchDebounceMs: 300,
+  });
   // Watch form values for validation
   const watchedValues = useWatch({
     control,
@@ -66,7 +128,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
 
     // Check for errors in any required field
     const hasErrors = Object.keys(requiredFields).some(
-      field => errors[field as keyof Partial<Vehiculo>],
+      field => errors[field as keyof Partial<VehiculoResponse>],
     );
 
     // Check if all required fields have values
@@ -193,79 +255,121 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
       <View style={styles.idsSection}>
         <Text style={styles.sectionTitle}>Atributos del vehículo</Text>
 
-        <FormSelectorController
+        <FormSearchableSelectorController
           control={control}
           name="carroceria"
-          label="Carrocería *"
-          error={errors.carroceria}
-          placeholder="Selecciona una carrocería"
-          options={carroceriaOptions}
-          isLoading={isLoadingCarroceria}
+          label="Carrocería"
+          placeholder="Seleccione una carrocería"
+          searchPlaceholder="Buscar carrocería..."
+          options={carroceriaSelector.options}
+          isLoading={carroceriaSelector.isLoading}
+          isSearching={carroceriaSelector.isSearching}
+          onSearch={carroceriaSelector.search}
+          onRetry={carroceriaSelector.retry}
+          restoreInitialOptions={carroceriaSelector.restoreInitialOptions}
+          emptyOptionsMessage="No hay carrocerías disponibles"
+          noResultsMessage="No se encontraron carrocerías"
+          apiError={carroceriaSelector.error}
           rules={{
-            required: 'Este campo es obligatorio',
+            required: 'La carrocería es requerida',
           }}
         />
 
-        <FormSelectorController
+        <FormSearchableSelectorController
           control={control}
           name="color"
           label="Color *"
-          error={errors.color}
-          placeholder="Selecciona un color"
-          options={colorOptions}
-          isLoading={isLoadingColor}
+          placeholder="Seleccione un color"
+          searchPlaceholder="Buscar color..."
+          options={colorSelector.options}
+          isLoading={colorSelector.isLoading}
+          isSearching={colorSelector.isSearching}
+          onSearch={colorSelector.search}
+          onRetry={colorSelector.retry}
+          restoreInitialOptions={colorSelector.restoreInitialOptions}
+          emptyOptionsMessage="No hay colores disponibles"
+          noResultsMessage="No se encontraron colores"
+          apiError={colorSelector.error}
           rules={{
             required: 'Este campo es obligatorio',
           }}
         />
 
-        <FormSelectorController
+        <FormSearchableSelectorController
           control={control}
           name="combustible"
           label="Combustible *"
-          error={errors.combustible}
-          placeholder="Selecciona un combustible"
-          options={combustibleOptions}
-          isLoading={isLoadingCombustible}
+          placeholder="Seleccione un combustible"
+          searchPlaceholder="Buscar combustible..."
+          options={combustibleSelector.options}
+          isLoading={combustibleSelector.isLoading}
+          isSearching={combustibleSelector.isSearching}
+          onSearch={combustibleSelector.search}
+          onRetry={combustibleSelector.retry}
+          restoreInitialOptions={combustibleSelector.restoreInitialOptions}
+          emptyOptionsMessage="No hay combustibles disponibles"
+          noResultsMessage="No se encontraron combustibles"
+          apiError={combustibleSelector.error}
           rules={{
             required: 'Este campo es obligatorio',
           }}
         />
 
-        <FormSelectorController
+        <FormSearchableSelectorController
           control={control}
           name="configuracion"
           label="Configuración *"
-          error={errors.configuracion}
-          placeholder="Selecciona una configuración"
-          options={configuracionOptions}
-          isLoading={isLoadingConfiguracion}
+          placeholder="Seleccione una configuración"
+          searchPlaceholder="Buscar configuración..."
+          options={configuracionSelector.options}
+          isLoading={configuracionSelector.isLoading}
+          isSearching={configuracionSelector.isSearching}
+          onSearch={configuracionSelector.search}
+          onRetry={configuracionSelector.retry}
+          restoreInitialOptions={configuracionSelector.restoreInitialOptions}
+          emptyOptionsMessage="No hay configuraciones disponibles"
+          noResultsMessage="No se encontraron configuraciones"
+          apiError={configuracionSelector.error}
           rules={{
             required: 'Este campo es obligatorio',
           }}
         />
 
-        <FormSelectorController
+        <FormSearchableSelectorController
           control={control}
           name="linea"
           label="Línea *"
-          error={errors.linea}
-          placeholder="Selecciona una línea"
-          options={lineaOptions}
-          isLoading={isLoadingLinea}
+          placeholder="Seleccione una línea"
+          searchPlaceholder="Buscar línea..."
+          options={lineaSelector.options}
+          isLoading={lineaSelector.isLoading}
+          isSearching={lineaSelector.isSearching}
+          onSearch={lineaSelector.search}
+          onRetry={lineaSelector.retry}
+          restoreInitialOptions={lineaSelector.restoreInitialOptions}
+          emptyOptionsMessage="No hay líneas disponibles"
+          noResultsMessage="No se encontraron líneas"
+          apiError={lineaSelector.error}
           rules={{
             required: 'Este campo es obligatorio',
           }}
         />
 
-        <FormSelectorController
+        <FormSearchableSelectorController
           control={control}
           name="marca"
           label="Marca *"
-          error={errors.marca}
-          placeholder="Selecciona una marca"
-          options={marcaOptions}
-          isLoading={isLoadingMarca}
+          placeholder="Seleccione una marca"
+          searchPlaceholder="Buscar marca..."
+          options={marcaSelector.options}
+          isLoading={marcaSelector.isLoading}
+          isSearching={marcaSelector.isSearching}
+          onSearch={marcaSelector.search}
+          onRetry={marcaSelector.retry}
+          restoreInitialOptions={marcaSelector.restoreInitialOptions}
+          emptyOptionsMessage="No hay marcas disponibles"
+          noResultsMessage="No se encontraron marcas"
+          apiError={marcaSelector.error}
           rules={{
             required: 'Este campo es obligatorio',
           }}

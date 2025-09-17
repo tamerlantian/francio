@@ -1,4 +1,3 @@
-import { ApiErrorResponse } from '@/src/core/interfaces/api.interface';
 import { ConfirmationDialog } from '@/src/shared/components/ui/dialog/ConfirmationDialog';
 import { ErrorState } from '@/src/shared/components/ui/error-state/ErrorState';
 import { LoadingSpinner } from '@/src/shared/components/ui/loading/LoadingSpinner';

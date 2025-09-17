@@ -68,47 +68,6 @@ export interface UseSearchableSelectorReturn {
 }
 
 /**
- * Common field mapping configurations for different entity types
- */
-export const COMMON_FIELD_MAPPINGS = {
-  /** Standard ID-Name mapping */
-  ID_NAME: {
-    labelField: 'name',
-    valueField: 'id',
-    searchableFields: ['name'],
-  },
-  /** Standard ID-Title mapping */
-  ID_TITLE: {
-    labelField: 'title',
-    valueField: 'id',
-    searchableFields: ['title'],
-  },
-  /** User entity mapping */
-  USER: {
-    labelField: 'full_name',
-    valueField: 'id',
-    searchableFields: ['full_name', 'email', 'username'],
-  },
-  /** Location entity mapping */
-  LOCATION: {
-    labelField: 'name',
-    valueField: 'id',
-  },
-  /** Vehicle entity mapping */
-  VEHICLE: {
-    labelField: 'placa',
-    valueField: 'id',
-    searchableFields: ['placa', 'modelo', 'chasis'],
-  },
-  /** Conductor entity mapping */
-  CONDUCTOR: {
-    labelField: 'full_name',
-    valueField: 'id',
-    searchableFields: ['full_name', 'cedula', 'telefono'],
-  },
-} as const;
-
-/**
  * Utility type for creating strongly typed selector configurations
  */
 export type TypedSearchableSelectorConfig<T = any> = Omit<

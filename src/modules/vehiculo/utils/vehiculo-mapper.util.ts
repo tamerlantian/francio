@@ -1,14 +1,13 @@
-import { Vehiculo, VehiculoResponse } from '../interfaces/vehiculo.interface';
+import { VehiculoResponse } from '../interfaces/vehiculo.interface';
 
 /**
  * Convierte un objeto VehiculoResponse a Vehiculo, asegurando que los tipos sean correctos
  * @param response Respuesta del API
  * @returns Objeto Vehiculo con los tipos correctos
  */
-export const mapVehiculoResponseVehiculo = (response: VehiculoResponse): Vehiculo => {
+export const mapVehiculoResponseVehiculo = (response: VehiculoResponse): VehiculoResponse => {
   return {
     id: response.id,
-    fecha_registro: '',
     placa: response.placa,
     modelo: response.modelo,
     modelo_repotenciado: response.modelo_repotenciado,
@@ -23,12 +22,18 @@ export const mapVehiculoResponseVehiculo = (response: VehiculoResponse): Vehicul
     vence_tecnicomecanica: response.vence_tecnicomecanica,
     propio: response.propio,
     remolque: response.remolque,
-    carroceria: response.carroceria ? String(response.carroceria) : '',
-    color: response.color ? String(response.color) : '',
-    combustible: response.combustible ? String(response.combustible) : '',
-    configuracion: response.configuracion ? String(response.configuracion) : '',
-    linea: response.linea ? String(response.linea) : '',
-    marca: response.marca ? String(response.marca) : '',
+    carroceria: response.carroceria,
+    carroceria__nombre: response.carroceria__nombre,
+    color: response.color,
+    color__nombre: response.color__nombre,
+    combustible: response.combustible,
+    combustible__nombre: response.combustible__nombre,
+    configuracion: response.configuracion,
+    configuracion__nombre: response.configuracion__nombre,
+    linea: response.linea,
+    linea__nombre: response.linea__nombre,
+    marca: response.marca,
+    marca__nombre: response.marca__nombre,
     // verificado: response.verificado,
   };
 };

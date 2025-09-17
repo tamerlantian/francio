@@ -3,15 +3,15 @@ import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm } from 'react-hook-form';
-import { Vehiculo } from '../interfaces/vehiculo.interface';
+import { VehiculoResponse } from '../interfaces/vehiculo.interface';
 import { BasicInfoStep } from './wizard-steps/basic-info-step';
 import { TechnicalInfoStep } from './wizard-steps/technical-info-step';
 import { DocumentsInfoStep } from './wizard-steps/documents-info-step';
 import { useCurrentUser } from '../../auth/view-models/auth.view-model';
 
 interface VehiculoWizardProps {
-  initialData?: Partial<Vehiculo>;
-  onSubmit: (_data: Partial<Vehiculo>) => void;
+  initialData?: Partial<VehiculoResponse>;
+  onSubmit: (_data: Partial<VehiculoResponse>) => void;
   onCancel: () => void;
   isLoading?: boolean;
   mode: 'create' | 'edit';
@@ -42,7 +42,7 @@ export const VehiculoWizard: React.FC<VehiculoWizardProps> = ({
     formState: { errors, isDirty },
     handleSubmit,
     reset,
-  } = useForm<Partial<Vehiculo>>({
+  } = useForm<Partial<VehiculoResponse>>({
     mode: 'onChange',
     defaultValues: initialData,
   });
@@ -163,7 +163,12 @@ export const VehiculoWizard: React.FC<VehiculoWizardProps> = ({
         );
       case 2:
         return (
-          <TechnicalInfoStep control={control} errors={errors} onValidationChange={validateStep2} />
+          <TechnicalInfoStep
+            initialData={initialData}
+            control={control}
+            errors={errors}
+            onValidationChange={validateStep2}
+          />
         );
       case 3:
         return (

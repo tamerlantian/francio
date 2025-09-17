@@ -38,6 +38,7 @@ export const useVehiculoById = (id: string) => {
     queryKey: vehiculoKeys.detail(id),
     queryFn: async () => {
       const response = await vehiculoController.getVehiculoById(id);
+      console.log(response);
       return mapVehiculoResponseVehiculo(response);
     },
     enabled: !!id,
