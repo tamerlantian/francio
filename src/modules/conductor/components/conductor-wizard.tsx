@@ -175,7 +175,7 @@ export const ConductorWizard: React.FC<ConductorWizardProps> = ({
         );
       case 2:
         return (
-          <ContactInfoStep control={control} errors={errors} onValidationChange={validateStep2} />
+          <ContactInfoStep initialData={initialData} control={control} errors={errors} onValidationChange={validateStep2} />
         );
       case 3:
         return (

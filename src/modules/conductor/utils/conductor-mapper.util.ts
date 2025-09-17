@@ -12,7 +12,7 @@ export const mapConductorResponseToConductor = (response: ConductorResponse): Co
     identificacion__nombre: '',
     digito_verificacion: '',
     verificado: false,
-    ciudad: response.ciudad ? String(response.ciudad) : '',
+    ciudad: response.ciudad,
     ciudad__nombre: response.ciudad__nombre,
     ciudad__estado__nombre: '',
     numero_identificacion: response.numero_identificacion,

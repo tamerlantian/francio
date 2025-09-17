@@ -3,7 +3,7 @@ export interface Conductor {
   identificacion: string;
   identificacion__nombre: string;
   digito_verificacion: string;
-  ciudad: string;
+  ciudad: number;
   ciudad__nombre: string;
   ciudad__estado__nombre: string;
   numero_identificacion: string;
@@ -28,7 +28,7 @@ export interface ConductorResponse {
   barrio: string;
   categoria_licencia: number;
   categoria_licencia__nombre: string;
-  celular: string;
+  celular: number;
   ciudad: number;
   ciudad__nombre: string;
   correo: string;

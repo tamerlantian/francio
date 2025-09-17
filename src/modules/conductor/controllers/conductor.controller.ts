@@ -39,6 +39,7 @@ export const conductorController = {
   getConductorById: async (id: string) => {
     try {
       const response = await ConductorRepository.getInstance().getConductorById(id);
+      console.log(response);
       return response;
     } catch (error) {
       throw error;

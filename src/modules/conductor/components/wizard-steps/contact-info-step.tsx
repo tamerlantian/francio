@@ -1,6 +1,7 @@
-import { useSeleccionarCiudad } from '@/src/modules/vertical/hooks/use-vertical.hook';
 import { FormInputController } from '@/src/shared/components/ui/form/FormInputController';
-import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
+import { FormSearchableSelectorController } from '@/src/shared/components/ui/form/FormSearchableSelectorController';
+import { useSearchableSelector } from '@/src/shared/hooks/use-searchable-selector.hook';
+import { COMMON_FIELD_MAPPINGS } from '@/src/shared/interfaces/searchable-selector.interface';
 import React, { useEffect } from 'react';
 import { Control, FieldErrors, useWatch } from 'react-hook-form';
 import { ScrollView, StyleSheet, Text } from 'react-native';
@@ -9,21 +10,31 @@ import { Conductor } from '../../interfaces/conductor.interface';
 interface ContactInfoStepProps {
   control: Control<Partial<Conductor>>;
   errors: FieldErrors<Partial<Conductor>>;
+  initialData?: Partial<Conductor>;
   onValidationChange: (_isValid: boolean) => void;
 }
 
 export const ContactInfoStep: React.FC<ContactInfoStepProps> = ({
   control,
   errors,
+  initialData,
   onValidationChange,
 }) => {
-  // Ciudad selector data
-  const {
-    ciudadOptions,
-    isLoading: isLoadingCiudad,
-    error: errorCiudad,
-    refetch: refetchCiudad,
-  } = useSeleccionarCiudad();
+  // Ciudad searchable selector
+  const ciudadSelector = useSearchableSelector({
+    endpoint: 'vertical/ciudad/seleccionar/',
+    ...COMMON_FIELD_MAPPINGS.LOCATION,
+    searchParam: 'nombre__icontains',
+    initialParams: { nombre__icontains: initialData?.ciudad__nombre },
+    minSearchLength: 1,
+    searchDebounceMs: 300,
+    transformData(data) {
+      return data.map(item => ({
+        label: `${item.nombre} - ${item.estado__nombre}`,
+        value: item.id,
+      }));
+    },
+  });
 
   // Watch form values for validation
   const watchedValues = useWatch({
@@ -111,18 +122,24 @@ export const ContactInfoStep: React.FC<ContactInfoStepProps> = ({
       />
 
       {/* Ciudad */}
-      <FormSelectorController
+      <FormSearchableSelectorController
         control={control}
         name="ciudad"
-        label="Ciudad *"
-        placeholder="Selecciona la ciudad"
-        options={ciudadOptions}
-        error={errors.ciudad}
-        rules={{ required: 'Este campo es obligatorio' }}
-        isLoading={isLoadingCiudad}
-        onRetry={refetchCiudad}
+        label="Ciudad"
+        placeholder="Seleccione una ciudad"
+        searchPlaceholder="Buscar ciudad..."
+        options={ciudadSelector.options}
+        isLoading={ciudadSelector.isLoading}
+        isSearching={ciudadSelector.isSearching}
+        onSearch={ciudadSelector.search}
+        onRetry={ciudadSelector.retry}
+        restoreInitialOptions={ciudadSelector.restoreInitialOptions}
         emptyOptionsMessage="No hay ciudades disponibles"
-        apiError={errorCiudad}
+        noResultsMessage="No se encontraron ciudades"
+        apiError={ciudadSelector.error}
+        rules={{
+          required: 'La ciudad es requerida',
+        }}
       />
 
       {/* <View style={styles.infoBox}>
