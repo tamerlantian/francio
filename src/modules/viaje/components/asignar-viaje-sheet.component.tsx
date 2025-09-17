@@ -1,5 +1,6 @@
 import CustomBottomSheet from '@/src/shared/components/bottom-sheet/bottom-sheet';
-import { FormSelectorController } from '@/src/shared/components/ui/form/FormSelectorController';
+import { FormSearchableSelectorController } from '@/src/shared/components/ui/form/FormSearchableSelectorController';
+import { useSearchableSelector } from '@/src/shared/hooks/use-searchable-selector.hook';
 import { Ionicons } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
 import React, { forwardRef } from 'react';
@@ -7,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 import { Viaje } from '../interfaces/viaje.interface';
 import { FormButton } from '@/src/shared/components/ui/button/FormButton';
+import { useCurrentUser } from '../../auth/view-models/auth.view-model';
 
 export interface AsignarViajeFormValues {
   conductor_id: string;
@@ -18,14 +20,13 @@ interface AsignarViajeSheetProps {
   viaje: Viaje | null;
   onAceptar: (_data: AsignarViajeFormValues) => void;
   onClose?: () => void;
-  conductoresOptions: { label: string; value: string }[];
-  vehiculosOptions: { label: string; value: string }[];
   isLoading?: boolean;
 }
 
 export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>(
-  ({ viaje, onAceptar, onClose, conductoresOptions, vehiculosOptions, isLoading = false }, ref) => {
+  ({ viaje, onAceptar, onClose, isLoading = false }, ref) => {
     // Configuración de React Hook Form
+    const { data: user } = useCurrentUser();
     const {
       control,
       handleSubmit,
@@ -39,8 +40,42 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
       },
       mode: 'onChange',
     });
-    // Ya no necesitamos este hook aquí porque recibimos isLoading como prop
-    // Esto asegura que el estado de carga esté sincronizado con la acción real
+    // Configuración de los selectores de búsqueda
+    const conductorSelector = useSearchableSelector({
+      endpoint: 'vertical/conductor/seleccionar/',
+      labelField: 'nombre_corto',
+      valueField: 'id',
+      searchParam: 'nombre_corto__icontains',
+      initialParams: {
+        usuario_id: user?.id,
+      },
+      minSearchLength: 1,
+      searchDebounceMs: 300,
+      transformData(data) {
+        return data.map(item => ({
+          label: item.nombre_corto,
+          value: item.id,
+        }));
+      },
+    });
+
+    const vehiculoSelector = useSearchableSelector({
+      endpoint: 'vertical/vehiculo/seleccionar/',
+      labelField: 'placa',
+      valueField: 'id',
+      searchParam: 'placa__icontains',
+      initialParams: {
+        usuario_id: user?.id,
+      },
+      minSearchLength: 1,
+      searchDebounceMs: 300,
+      transformData(data) {
+        return data.map(item => ({
+          label: `${item.placa}`,
+          value: item.id,
+        }));
+      },
+    });
 
     // Manejar el envío del formulario
     const onSubmit = (data: AsignarViajeFormValues) => {
@@ -70,22 +105,40 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
           </View>
 
           <View style={styles.selectorsContainer}>
-            <FormSelectorController
+            <FormSearchableSelectorController
               control={control}
               name="conductor_id"
               label="Conductor"
               placeholder="Seleccionar conductor"
-              options={conductoresOptions}
+              searchPlaceholder="Buscar conductor..."
+              options={conductorSelector.options}
+              isLoading={conductorSelector.isLoading}
+              isSearching={conductorSelector.isSearching}
+              onSearch={conductorSelector.search}
+              onRetry={conductorSelector.retry}
+              restoreInitialOptions={conductorSelector.restoreInitialOptions}
+              emptyOptionsMessage="No hay conductores disponibles"
+              noResultsMessage="No se encontraron conductores"
+              apiError={conductorSelector.error}
               error={errors.conductor_id}
               rules={{ required: 'El conductor es obligatorio' }}
             />
 
-            <FormSelectorController
+            <FormSearchableSelectorController
               control={control}
               name="vehiculo_id"
               label="Vehículo"
               placeholder="Seleccionar vehículo"
-              options={vehiculosOptions}
+              searchPlaceholder="Buscar vehículo..."
+              options={vehiculoSelector.options}
+              isLoading={vehiculoSelector.isLoading}
+              isSearching={vehiculoSelector.isSearching}
+              onSearch={vehiculoSelector.search}
+              onRetry={vehiculoSelector.retry}
+              restoreInitialOptions={vehiculoSelector.restoreInitialOptions}
+              emptyOptionsMessage="No hay vehículos disponibles"
+              noResultsMessage="No se encontraron vehículos"
+              apiError={vehiculoSelector.error}
               error={errors.vehiculo_id}
               rules={{ required: 'El vehículo es obligatorio' }}
             />

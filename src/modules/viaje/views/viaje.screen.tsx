@@ -1,5 +1,4 @@
-import { useConductoresSelector } from '@/src/modules/conductor/view-models/conductor.view-model';
-import { useVehiculosSelector } from '@/src/modules/vehiculo/view-models/vehiculo.view-model';
+// Ya no necesitamos estos imports porque los selectores se manejan en el componente AsignarViajeSheet
 import { EmptyState } from '@/src/shared/components/ui/empty-state/EmptyState';
 import { ErrorState } from '@/src/shared/components/ui/error-state/ErrorState';
 import { LoadingSpinner } from '@/src/shared/components/ui/loading/LoadingSpinner';
@@ -25,13 +24,8 @@ export default function ViajeScreen() {
     isError: isErrorViajes,
     refetch: refetchViajes,
   } = useViaje();
-  const {
-    conductoresOptions,
-    isLoading: isLoadingConductores,
-    isError: isErrorConductores,
-    refetch: refetchConductores,
-  } = useConductoresSelector();
-  const { vehiculosOptions, refetch: refetchVehiculos } = useVehiculosSelector();
+  // Ya no necesitamos los selectores de conductores y vehículos
+  // porque ahora se manejan directamente en el componente AsignarViajeSheet
   // Usar el hook para aceptar viajes
   const { aceptarViaje, isLoading: isLoadingAceptar } = useAceptarViaje();
 
@@ -62,8 +56,8 @@ export default function ViajeScreen() {
   // Función para manejar el pull-to-refresh
   const handleRefresh = () => {
     refetchViajes();
-    refetchVehiculos();
-    refetchConductores();
+    // Ya no necesitamos refrescar los selectores de conductores y vehículos
+    // porque ahora se manejan directamente en el componente AsignarViajeSheet
   };
 
   // Manejar la aceptación del viaje
@@ -87,9 +81,9 @@ export default function ViajeScreen() {
     }
   };
 
-  // Estado de carga combinado
-  const isLoading = isLoadingViajes || isLoadingConductores;
-  const isError = isErrorViajes || isErrorConductores;
+  // Estado de carga
+  const isLoading = isLoadingViajes;
+  const isError = isErrorViajes;
 
   // Si está cargando, mostramos un indicador
   if (isLoading) {
@@ -146,8 +140,6 @@ export default function ViajeScreen() {
           viaje={selectedViaje}
           onAceptar={handleAceptar}
           onClose={handleBottomSheetClose}
-          conductoresOptions={conductoresOptions}
-          vehiculosOptions={vehiculosOptions}
           isLoading={isLoadingAceptar}
         />
       </View>

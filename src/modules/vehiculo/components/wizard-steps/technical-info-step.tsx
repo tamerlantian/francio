@@ -19,7 +19,6 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
   initialData,
   onValidationChange,
 }) => {
-  console.log('initialData', initialData);
   const carroceriaSelector = useSearchableSelector({
     endpoint: 'vertical/carroceria/seleccionar/',
     labelField: 'nombre',
@@ -140,9 +139,6 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
       // For string fields
       return value !== undefined && value !== null && value !== '';
     });
-
-    console.log('Field values:', requiredFields);
-    console.log('Has all required values:', hasRequiredValues);
 
     const isValid = !hasErrors && hasRequiredValues;
     onValidationChange(isValid);
