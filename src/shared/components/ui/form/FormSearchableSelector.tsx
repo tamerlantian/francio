@@ -37,6 +37,8 @@ interface FormSearchableSelectorProps {
   minSearchLength?: number;
   searchDebounceMs?: number;
   restoreInitialOptions?: () => void; // Nueva propiedad para restaurar opciones iniciales
+  allowDeselection?: boolean; // Permite deseleccionar la opción actual
+  clearSelectionText?: string; // Texto del botón de limpiar selección
 }
 
 export const FormSearchableSelector = ({
@@ -56,6 +58,8 @@ export const FormSearchableSelector = ({
   minSearchLength = 2,
   searchDebounceMs = 300,
   restoreInitialOptions, // Nueva propiedad para restaurar opciones iniciales
+  allowDeselection = false, // Por defecto no permite deselección
+  clearSelectionText = 'Limpiar selección', // Texto por defecto
 }: FormSearchableSelectorProps) => {
   // Estado para controlar la visibilidad del modal
   const [modalVisible, setModalVisible] = useState(false);
@@ -192,6 +196,31 @@ export const FormSearchableSelector = ({
     });
   };
 
+  // Limpiar selección y cerrar modal
+  const clearSelection = () => {
+    onValueChange(''); // Limpiar la selección
+    setSearchTerm('');
+    setLocalSearchTerm('');
+
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 300,
+        easing: Easing.in(Easing.ease),
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: Dimensions.get('window').height,
+        duration: 300,
+        easing: Easing.in(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setModalVisible(false);
+      // No restauramos opciones iniciales al limpiar selección
+    });
+  };
+
   // Manejar cambio en el input de búsqueda
   const handleSearchChange = (text: string) => {
     setSearchTerm(text);
@@ -236,9 +265,17 @@ export const FormSearchableSelector = ({
           <Animated.View style={[styles.modalContent, { transform: [{ translateY: slideAnim }] }]}>
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>{label}</Text>
-              <TouchableOpacity onPress={closeModal}>
-                <Ionicons name="close" size={24} color="#333" />
-              </TouchableOpacity>
+              <View style={styles.modalHeaderActions}>
+                {allowDeselection && selectedOption && (
+                  <TouchableOpacity onPress={clearSelection} style={styles.clearSelectionButton}>
+                    <Ionicons name="trash-outline" size={20} color="#FF3B30" />
+                    <Text style={styles.clearSelectionButtonText}>{clearSelectionText}</Text>
+                  </TouchableOpacity>
+                )}
+                <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+                  <Ionicons name="close" size={24} color="#333" />
+                </TouchableOpacity>
+              </View>
             </View>
 
             {/* Barra de búsqueda */}
@@ -435,6 +472,30 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '600',
     color: '#333',
+  },
+  modalHeaderActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  clearSelectionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    backgroundColor: '#FFF5F5',
+    borderWidth: 1,
+    borderColor: '#FFE5E5',
+  },
+  clearSelectionButtonText: {
+    fontSize: 12,
+    color: '#FF3B30',
+    marginLeft: 4,
+    fontWeight: '500',
+  },
+  closeButton: {
+    padding: 4,
   },
   searchContainer: {
     paddingHorizontal: 16,

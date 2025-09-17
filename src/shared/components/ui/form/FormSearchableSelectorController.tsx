@@ -21,6 +21,8 @@ interface FormSearchableSelectorControllerProps<T extends FieldValues> {
   searchDebounceMs?: number;
   apiError?: Error | null;
   restoreInitialOptions?: () => void;
+  allowDeselection?: boolean; // Permite deseleccionar la opción actual
+  clearSelectionText?: string; // Texto del botón de limpiar selección
 }
 
 export const FormSearchableSelectorController = <T extends FieldValues>({
@@ -42,6 +44,8 @@ export const FormSearchableSelectorController = <T extends FieldValues>({
   searchDebounceMs,
   apiError,
   restoreInitialOptions,
+  allowDeselection,
+  clearSelectionText,
 }: FormSearchableSelectorControllerProps<T>) => {
   return (
     <Controller
@@ -66,6 +70,8 @@ export const FormSearchableSelectorController = <T extends FieldValues>({
           minSearchLength={minSearchLength}
           searchDebounceMs={searchDebounceMs}
           restoreInitialOptions={restoreInitialOptions}
+          allowDeselection={allowDeselection}
+          clearSelectionText={clearSelectionText}
         />
       )}
     />
