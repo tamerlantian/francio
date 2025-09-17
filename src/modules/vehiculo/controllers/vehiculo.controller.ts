@@ -1,6 +1,6 @@
 import { ApiQueryParametros } from '@/src/core/interfaces/api.interface';
 import { VehiculoRepository } from '../repositories/vehiculo.repository';
-import { Vehiculo } from '../interfaces/vehiculo.interface';
+import { Vehiculo, VehiculoResponse } from '../interfaces/vehiculo.interface';
 
 // Controlador para manejar las operaciones relacionadas con vehículos
 export const vehiculoController = {
@@ -46,7 +46,7 @@ export const vehiculoController = {
   },
 
   // Actualizar un vehículo existente
-  updateVehiculo: async (data: Vehiculo) => {
+  updateVehiculo: async (data: VehiculoResponse) => {
     try {
       const response = await VehiculoRepository.getInstance().updateVehiculo(data);
       return response;

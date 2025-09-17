@@ -68,7 +68,7 @@ export class VehiculoRepository extends HttpBaseRepository {
    * @param data Datos del vehículo a actualizar
    * @returns Promise con la respuesta de la actualización del vehículo
    */
-  async updateVehiculo(data: Vehiculo) {
+  async updateVehiculo(data: VehiculoResponse) {
     return this.put<VehiculoResponse>(`vertical/vehiculo/${data.id}/`, data);
   }
 }

@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { VehiculoWizard } from '../components/vehiculo-wizard';
-import { Vehiculo } from '../interfaces/vehiculo.interface';
+import { Vehiculo, VehiculoResponse } from '../interfaces/vehiculo.interface';
 import { useUpdateVehiculo, useVehiculoById } from '../view-models/vehiculo.view-model';
 
 interface VehiculoEditScreenProps {
@@ -22,12 +22,12 @@ export default function VehiculoEditScreen({ vehiculoId }: VehiculoEditScreenPro
 
   const { mutateAsync: updateVehiculo } = useUpdateVehiculo();
 
-  const handleSubmit = async (data: Partial<Vehiculo>) => {
+  const handleSubmit = async (data: Partial<VehiculoResponse>) => {
     try {
       setIsSubmitting(true);
       // Aseguramos que el ID esté presente en los datos
       if (vehiculo && data) {
-        await updateVehiculo({ ...vehiculo, ...data } as Vehiculo);
+        await updateVehiculo({ ...vehiculo, ...data } as VehiculoResponse);
         router.back();
       }
     } catch (error) {

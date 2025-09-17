@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { vehiculoController } from '../controllers/vehiculo.controller';
-import { Vehiculo } from '../interfaces/vehiculo.interface';
+import { Vehiculo, VehiculoResponse } from '../interfaces/vehiculo.interface';
 import { useToast } from '@/src/shared/hooks/use-toast.hook';
 import { ApiErrorResponse } from '@/src/core/interfaces/api.interface';
 import { mapVehiculoResponseVehiculo } from '../utils/vehiculo-mapper.util';
@@ -84,7 +84,7 @@ export const useUpdateVehiculo = () => {
   const queryClient = useQueryClient();
   const toast = useToast();
   const { mutateAsync, isError, error } = useMutation({
-    mutationFn: (data: Vehiculo) => vehiculoController.updateVehiculo(data),
+    mutationFn: (data: VehiculoResponse) => vehiculoController.updateVehiculo(data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: vehiculoKeys.list() });
       queryClient.invalidateQueries({ queryKey: vehiculoKeys.detail(variables.id.toString()) });
