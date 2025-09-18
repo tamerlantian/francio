@@ -49,7 +49,7 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
       initialParams: {
         usuario_id: user?.id,
       },
-      minSearchLength: 1,
+      minSearchLength: 0,
       searchDebounceMs: 300,
       transformData(data) {
         return data.map(item => ({
@@ -67,7 +67,7 @@ export const AsignarViajeSheet = forwardRef<BottomSheet, AsignarViajeSheetProps>
       initialParams: {
         usuario_id: user?.id,
       },
-      minSearchLength: 1,
+      minSearchLength: 0,
       searchDebounceMs: 300,
       transformData(data) {
         return data.map(item => ({

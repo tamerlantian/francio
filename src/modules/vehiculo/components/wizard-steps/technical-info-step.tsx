@@ -41,7 +41,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
     initialParams: initialData?.color__nombre
       ? { nombre__icontains: initialData.color__nombre }
       : undefined,
-    minSearchLength: 1,
+    minSearchLength: 0,
     searchDebounceMs: 300,
   });
 
@@ -53,7 +53,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
     initialParams: initialData?.combustible__nombre
       ? { nombre__icontains: initialData.combustible__nombre }
       : undefined,
-    minSearchLength: 1,
+    minSearchLength: 0,
     searchDebounceMs: 300,
   });
 
@@ -65,7 +65,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
     initialParams: initialData?.configuracion__nombre
       ? { nombre__icontains: initialData.configuracion__nombre }
       : undefined,
-    minSearchLength: 1,
+    minSearchLength: 0,
     searchDebounceMs: 300,
   });
 
@@ -77,7 +77,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
     initialParams: initialData?.linea__nombre
       ? { nombre__icontains: initialData.linea__nombre }
       : undefined,
-    minSearchLength: 1,
+    minSearchLength: 0,
     searchDebounceMs: 300,
   });
 
@@ -89,7 +89,7 @@ export const TechnicalInfoStep: React.FC<TechnicalInfoStepProps> = ({
     initialParams: initialData?.marca__nombre
       ? { nombre__icontains: initialData.marca__nombre }
       : undefined,
-    minSearchLength: 1,
+    minSearchLength: 0,
     searchDebounceMs: 300,
   });
   // Watch form values for validation

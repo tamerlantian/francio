@@ -55,7 +55,7 @@ export const FormSearchableSelector = ({
   onRetry,
   emptyOptionsMessage,
   noResultsMessage = 'No se encontraron resultados',
-  minSearchLength = 2,
+  minSearchLength = 0,
   searchDebounceMs = 300,
   restoreInitialOptions, // Nueva propiedad para restaurar opciones iniciales
   allowDeselection = false, // Por defecto no permite deselección
@@ -93,7 +93,6 @@ export const FormSearchableSelector = ({
     if (searchTimeoutRef.current) {
       clearTimeout(searchTimeoutRef.current);
     }
-
     if (onSearch && searchTerm.length >= minSearchLength) {
       searchTimeoutRef.current = setTimeout(() => {
         onSearch(searchTerm);

@@ -26,7 +26,7 @@ export const ContactInfoStep: React.FC<ContactInfoStepProps> = ({
     valueField: 'id',
     searchParam: 'nombre__icontains',
     initialParams: { nombre__icontains: initialData?.ciudad__nombre },
-    minSearchLength: 1,
+    minSearchLength: 0,
     searchDebounceMs: 300,
     transformData(data) {
       return data.map(item => ({

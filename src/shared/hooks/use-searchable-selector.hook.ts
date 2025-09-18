@@ -100,7 +100,7 @@ export const useSearchableSelector = (
       }
 
       const currentConfig = configRef.current;
-      const minLength = currentConfig.minSearchLength || 2;
+      const minLength = currentConfig.minSearchLength || 0;
       if (searchTerm.length < minLength) {
         return;
       }
