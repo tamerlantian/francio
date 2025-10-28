@@ -4,6 +4,7 @@
 export interface LoginCredentials {
   username: string;
   password: string;
+  proyecto: string;
 }
 
 export interface RegisterCredentials {

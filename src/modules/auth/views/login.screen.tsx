@@ -44,6 +44,7 @@ export const LoginScreen = () => {
     defaultValues: {
       username: '',
       password: '',
+      proyecto: 'REDDOC',
     },
     mode: 'onChange',
   });
